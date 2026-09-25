@@ -572,24 +572,28 @@
         Dashboard
       </button>
 
-      <button class="active">
+      <button class="active" onclick="goGames()">
         Games
       </button>
 
-      <button onclick="comingSoon('AB Bucks')">
+      <button onclick="goBucks()">
         AB Bucks
       </button>
 
-      <button onclick="comingSoon('History')">
+      <button onclick="goHistory()">
         History
       </button>
 
-      <button onclick="comingSoon('Analytics')">
+      <button onclick="goAnalytics()">
         Analytics
       </button>
 
-      <button onclick="comingSoon('Profile')">
+      <button onclick="goProfile()">
         Profile
+      </button>
+
+      <button onclick="goSettings()">
+        Settings
       </button>
 
     </nav>
@@ -1498,10 +1502,31 @@
   /* NAVIGATION */
 
   function goDashboard() {
+    window.location.href = "dashboard.html";
+  }
 
-    window.location.href =
-      "dashboard.html";
+  function goGames() {
+    window.location.href = "games.html";
+  }
 
+  function goBucks() {
+    window.location.href = "bucks.html";
+  }
+
+  function goHistory() {
+    window.location.href = "history.html";
+  }
+
+  function goAnalytics() {
+    window.location.href = "analytics.html";
+  }
+
+  function goProfile() {
+    window.location.href = "profile.html";
+  }
+
+  function goSettings() {
+    window.location.href = "settings.html";
   }
 
 
@@ -1513,15 +1538,6 @@
 
     window.location.href =
       "login.html";
-
-  }
-
-
-  function comingSoon(name) {
-
-    showToast(
-      name + " will be connected later."
-    );
 
   }
 
