@@ -23,8 +23,6 @@
       color: white;
     }
 
-    /* NAVIGATION */
-
     nav {
       position: fixed;
       top: 0;
@@ -91,8 +89,6 @@
       background: #ff70b7;
     }
 
-    /* HERO */
-
     .hero {
       min-height: 100vh;
       display: flex;
@@ -152,8 +148,6 @@
       gap: 10px;
     }
 
-    /* PREVIEW CARD */
-
     .preview {
       padding: 25px;
       border: 1px solid #302a30;
@@ -194,5 +188,369 @@
     }
 
     .balance span {
-      col
+      color: #f05aa9;
+      font-size: 16px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .stat {
+      padding: 15px;
+      border: 1px solid #2c272c;
+      border-radius: 10px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 17px;
+    }
+
+    .stat small {
+      color: #777;
+    }
+
+    section.info {
+      padding: 100px 7%;
+      border-top: 1px solid #191719;
+    }
+
+    .section-inner {
+      max-width: 1050px;
+      margin: auto;
+    }
+
+    .section-title {
+      font-size: 40px;
+      letter-spacing: -2px;
+      margin-bottom: 12px;
+    }
+
+    .section-description {
+      color: #888;
+      max-width: 600px;
+      margin-bottom: 35px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .card {
+      background: #111011;
+      border: 1px solid #292529;
+      border-radius: 14px;
+      padding: 25px;
+    }
+
+    .card h3 {
+      margin-bottom: 9px;
+    }
+
+    .card p {
+      color: #858085;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    footer {
+      padding: 35px 7%;
+      border-top: 1px solid #252125;
+      color: #666;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    @media (max-width: 800px) {
+      .nav-links {
+        display: none;
+      }
+
+      nav {
+        padding: 0 20px;
+      }
+
+      .hero {
+        padding: 110px 25px 70px;
+      }
+
+      .hero-content {
+        grid-template-columns: 1fr;
+        gap: 45px;
+      }
+
+      h1 {
+        font-size: 55px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      section.info {
+        padding: 75px 25px;
+      }
+
+      footer {
+        padding: 30px 25px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+
+    <div class="logo">
+      Key<span>flame</span>
+    </div>
+
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#help">Help</a>
+      <a href="#support">Support</a>
+    </div>
+
+    <div class="nav-buttons">
+
+      <button onclick="window.location.href='login.html'">
+        Admin Access
+      </button>
+
+      <button class="pink" onclick="window.location.href='login.html'">
+        Sign In
+      </button>
+
+    </div>
+
+  </nav>
+
+
+  <main>
+
+    <section class="hero">
+
+      <div class="hero-content">
+
+        <div>
+
+          <div class="eyebrow">
+            AB Server
+          </div>
+
+          <h1>
+            Your AB<br>
+            Server.
+          </h1>
+
+          <p class="hero-text">
+            Manage your AB Bucks, check your activity,
+            and keep everything in one place with Keyflame.
+          </p>
+
+          <div class="hero-actions">
+
+            <button
+              class="pink"
+              onclick="window.location.href='login.html'">
+              Sign In
+            </button>
+
+            <button
+              onclick="document.getElementById('about').scrollIntoView()">
+              Learn More
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div class="preview">
+
+          <div class="preview-top">
+
+            <strong>Keyflame</strong>
+
+            <div class="online">
+              <span class="dot"></span>
+              Server online
+            </div>
+
+          </div>
+
+          <div class="balance-title">
+            AB Bucks
+          </div>
+
+          <div class="balance">
+            —
+            <span>AB</span>
+          </div>
+
+          <div class="stats">
+
+            <div class="stat">
+              <strong>History</strong>
+              <small>Track activity</small>
+            </div>
+
+            <div class="stat">
+              <strong>Analytics</strong>
+              <small>See changes</small>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="info" id="about">
+
+      <div class="section-inner">
+
+        <div class="eyebrow">
+          About
+        </div>
+
+        <h2 class="section-title">
+          Everything in one place.
+        </h2>
+
+        <p class="section-description">
+          Keyflame gives each account its own space while
+          keeping AB Bucks and activity organized.
+        </p>
+
+        <div class="cards">
+
+          <div class="card">
+            <h3>AB Bucks</h3>
+            <p>
+              View your current balance and keep track
+              of changes over time.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>History</h3>
+            <p>
+              See additions, removals, dates, and reasons
+              for AB Bucks changes.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>Analytics</h3>
+            <p>
+              See how your balance changes over different
+              periods of time.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="info" id="help">
+
+      <div class="section-inner">
+
+        <div class="eyebrow">
+          Help
+        </div>
+
+        <h2 class="section-title">
+          Need a hand?
+        </h2>
+
+        <p class="section-description">
+          Keyflame will have simple navigation and clear
+          information throughout the dashboard.
+        </p>
+
+        <div class="cards">
+
+          <div class="card">
+            <h3>Your Account</h3>
+            <p>
+              You and your brother will have separate
+              usernames and passwords.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>Admin Access</h3>
+            <p>
+              Your account will have additional management
+              features that the regular account cannot access.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>Security</h3>
+            <p>
+              Real authentication will be connected
+              to a secure backend.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="info" id="support">
+
+      <div class="section-inner">
+
+        <div class="eyebrow">
+          Support
+        </div>
+
+        <h2 class="section-title">
+          Something not working?
+        </h2>
+
+        <p class="section-description">
+          Support tools can be added here as the Keyflame
+          system grows.
+        </p>
+
+        <button
+          class="pink"
+          onclick="window.location.href='login.html'">
+          Open Keyflame
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <footer>
+    <span>Keyflame · AB Server</span>
+    <span>Private account system</span>
+  </footer>
+
+</body>
+</html>
 ```
