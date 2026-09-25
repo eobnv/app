@@ -35,8 +35,6 @@
       min-height: 100vh;
     }
 
-    /* SIDEBAR */
-
     .sidebar {
       width: 250px;
       background: #0f0d10;
@@ -73,6 +71,7 @@
     }
 
     .nav button {
+      width: 100%;
       border: 0;
       background: transparent;
       color: #999;
@@ -108,7 +107,10 @@
       color: #aaa;
     }
 
-    /* MAIN */
+    .logout button:hover {
+      color: #fff;
+      border-color: #ff4fa3;
+    }
 
     .main {
       margin-left: 250px;
@@ -142,8 +144,6 @@
       font-size: 13px;
     }
 
-    /* CARDS */
-
     .stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -172,8 +172,6 @@
     .pink {
       color: #ff5eaa;
     }
-
-    /* CONTENT */
 
     .grid {
       display: grid;
@@ -236,8 +234,6 @@
       color: #ff5eaa;
     }
 
-    /* FORM */
-
     label {
       display: block;
       color: #aaa;
@@ -267,12 +263,6 @@
     textarea {
       min-height: 90px;
       resize: vertical;
-    }
-
-    .amount-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
     }
 
     .action-row {
@@ -305,8 +295,6 @@
       color: #ff76b6;
       border: 1px solid #48263a;
     }
-
-    /* ACTIVITY */
 
     .activity {
       margin-top: 20px;
@@ -348,8 +336,6 @@
       color: #ff6f8f;
     }
 
-    /* QUICK ACTIONS */
-
     .quick {
       display: grid;
       gap: 10px;
@@ -362,14 +348,14 @@
       border: 1px solid #2a252b;
       background: #0c0b0d;
       color: #ddd;
+      transition: .2s;
     }
 
     .quick button:hover {
       border-color: #ff4fa3;
       background: #171016;
+      transform: translateX(2px);
     }
-
-    /* TOAST */
 
     .toast {
       position: fixed;
@@ -390,8 +376,6 @@
       opacity: 1;
       transform: translateY(0);
     }
-
-    /* MOBILE */
 
     @media (max-width: 900px) {
       .sidebar {
@@ -453,60 +437,113 @@
 <div class="layout">
 
   <aside class="sidebar">
-    <div class="logo">Key<span>flame</span></div>
+
+    <div class="logo">
+      Key<span>flame</span>
+    </div>
 
     <div class="nav-title">Admin</div>
 
     <nav class="nav">
-      <button class="active">Dashboard</button>
-      <button>Users</button>
-      <button>AB Bucks</button>
-      <button>History</button>
-      <button>Analytics</button>
-      <button>Admin Panel</button>
-      <button>Settings</button>
+
+      <button class="active" onclick="goAdmin()">
+        Dashboard
+      </button>
+
+      <button onclick="showComingSoon('Users')">
+        Users
+      </button>
+
+      <button onclick="goBucks()">
+        AB Bucks
+      </button>
+
+      <button onclick="showComingSoon('History')">
+        History
+      </button>
+
+      <button onclick="showComingSoon('Analytics')">
+        Analytics
+      </button>
+
+      <button onclick="showComingSoon('Admin Panel')">
+        Admin Panel
+      </button>
+
+      <button onclick="showComingSoon('Settings')">
+        Settings
+      </button>
+
     </nav>
 
     <div class="logout">
-      <button onclick="logout()">Log Out</button>
+      <button onclick="logout()">
+        Log Out
+      </button>
     </div>
+
   </aside>
 
 
   <main class="main">
 
     <div class="topbar">
+
       <div>
         <h1>Admin Dashboard</h1>
         <p>Manage the AB Server.</p>
       </div>
 
-      <div class="admin-badge">ADMIN</div>
+      <div class="admin-badge">
+        ADMIN
+      </div>
+
     </div>
 
-
-    <!-- STATS -->
 
     <section class="stats">
 
       <div class="card">
-        <div class="stat-label">Brother's Balance</div>
-        <div class="stat-value pink" id="balanceStat">0 AB</div>
+        <div class="stat-label">
+          Brother's Balance
+        </div>
+
+        <div class="stat-value pink" id="balanceStat">
+          0 AB
+        </div>
       </div>
 
-      <div class="card">
-        <div class="stat-label">Total Added</div>
-        <div class="stat-value" id="addedStat">0 AB</div>
-      </div>
 
       <div class="card">
-        <div class="stat-label">Total Removed</div>
-        <div class="stat-value" id="removedStat">0 AB</div>
+        <div class="stat-label">
+          Total Added
+        </div>
+
+        <div class="stat-value" id="addedStat">
+          0 AB
+        </div>
       </div>
 
+
       <div class="card">
-        <div class="stat-label">Transactions</div>
-        <div class="stat-value" id="transactionStat">0</div>
+        <div class="stat-label">
+          Total Removed
+        </div>
+
+        <div class="stat-value" id="removedStat">
+          0 AB
+        </div>
+      </div>
+
+
+      <div class="card">
+        <div class="stat-label">
+          Transactions
+        </div>
+
+        <div class="stat-value" id="transactionStat">
+          0
+        </div>
       </div>
 
     </section>
@@ -514,62 +551,96 @@
 
     <section class="grid">
 
-      <!-- AB BUCKS -->
 
       <div class="card">
 
         <h2>AB Bucks Management</h2>
-        <p class="sub">Change your brother's AB Bucks balance.</p>
+
+        <p class="sub">
+          Change your brother's AB Bucks balance.
+        </p>
+
 
         <div class="brother">
 
           <div class="user-info">
 
-            <div class="avatar">B</div>
+            <div class="avatar">
+              B
+            </div>
 
             <div>
-              <div class="username">Brother</div>
-              <div class="role">Regular User</div>
+              <div class="username">
+                Brother
+              </div>
+
+              <div class="role">
+                Regular User
+              </div>
             </div>
 
           </div>
 
-          <div class="balance" id="balanceDisplay">0 AB</div>
+          <div class="balance" id="balanceDisplay">
+            0 AB
+          </div>
 
         </div>
 
 
-        <label for="amount">Amount</label>
+        <label for="amount">
+          Amount
+        </label>
+
         <input
           id="amount"
           type="number"
           min="1"
+          step="1"
           placeholder="Enter amount"
         >
 
 
-        <label for="reason">Reason / Note</label>
+        <label for="reason">
+          Reason / Note
+        </label>
+
         <textarea
           id="reason"
           placeholder="Why are you adding or removing AB Bucks?"
         ></textarea>
 
 
-        <label for="game">Related Game (optional)</label>
+        <label for="game">
+          Related Game (optional)
+        </label>
 
         <select id="game">
-          <option value="">No game selected</option>
-          <option value="Rip-Off Minecraft">Rip-Off Minecraft</option>
+
+          <option value="">
+            No game selected
+          </option>
+
+          <option value="Rip-Off Minecraft">
+            Rip-Off Minecraft
+          </option>
+
         </select>
 
 
         <div class="action-row">
 
-          <button class="btn add" onclick="changeBucks(1)">
+          <button
+            class="btn add"
+            onclick="changeBucks(1)"
+          >
             + Add AB Bucks
           </button>
 
-          <button class="btn remove" onclick="changeBucks(-1)">
+          <button
+            class="btn remove"
+            onclick="changeBucks(-1)"
+          >
             − Remove AB Bucks
           </button>
 
@@ -578,12 +649,15 @@
       </div>
 
 
-      <!-- QUICK ACTIONS -->
-
       <div class="card">
 
-        <h2>Quick Actions</h2>
-        <p class="sub">Common AB Bucks actions.</p>
+        <h2>
+          Quick Actions
+        </h2>
+
+        <p class="sub">
+          Common AB Bucks actions.
+        </p>
 
         <div class="quick">
 
@@ -618,17 +692,22 @@
     </section>
 
 
-    <!-- RECENT ACTIVITY -->
-
     <section class="card activity">
 
-      <h2>Recent Activity</h2>
-      <p class="sub">Recent AB Bucks changes.</p>
+      <h2>
+        Recent Activity
+      </h2>
+
+      <p class="sub">
+        Recent AB Bucks changes.
+      </p>
 
       <div id="activityList">
+
         <p style="color:#666;font-size:13px;">
           No transactions yet.
         </p>
+
       </div>
 
     </section>
@@ -643,244 +722,433 @@
 
 <script>
 
-  const STORAGE_KEY = "keyflame_admin_data";
-
-  let data = JSON.parse(
-    localStorage.getItem(STORAGE_KEY)
-  ) || {
-    balance: 0,
-    transactions: []
-  };
+const STORAGE_KEY = "keyflame_admin_data";
 
 
-  function save() {
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(data)
-    );
+function loadData() {
+
+  try {
+
+    const saved =
+      localStorage.getItem(STORAGE_KEY);
+
+    if (!saved) {
+
+      return {
+        balance: 0,
+        transactions: []
+      };
+
+    }
+
+    const parsed = JSON.parse(saved);
+
+    return {
+      balance: Number(parsed.balance) || 0,
+      transactions: Array.isArray(parsed.transactions)
+        ? parsed.transactions
+        : []
+    };
+
+  } catch {
+
+    return {
+      balance: 0,
+      transactions: []
+    };
+
+  }
+
+}
+
+
+let data = loadData();
+
+
+function save() {
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(data)
+  );
+
+}
+
+
+function updateUI() {
+
+  document.getElementById("balanceStat").textContent =
+    data.balance + " AB";
+
+  document.getElementById("balanceDisplay").textContent =
+    data.balance + " AB";
+
+
+  const added =
+    data.transactions
+      .filter(t => Number(t.amount) > 0)
+      .reduce(
+        (sum, t) => sum + Number(t.amount),
+        0
+      );
+
+
+  const removed =
+    data.transactions
+      .filter(t => Number(t.amount) < 0)
+      .reduce(
+        (sum, t) => sum + Math.abs(Number(t.amount)),
+        0
+      );
+
+
+  document.getElementById("addedStat").textContent =
+    added + " AB";
+
+
+  document.getElementById("removedStat").textContent =
+    removed + " AB";
+
+
+  document.getElementById("transactionStat").textContent =
+    data.transactions.length;
+
+
+  const list =
+    document.getElementById("activityList");
+
+
+  if (data.transactions.length === 0) {
+
+    list.innerHTML =
+      '<p style="color:#666;font-size:13px;">No transactions yet.</p>';
+
+    return;
+
   }
 
 
-  function updateUI() {
+  list.innerHTML =
+    data.transactions
+      .slice()
+      .reverse()
+      .slice(0, 10)
+      .map(t => {
 
-    document.getElementById("balanceStat").textContent =
-      data.balance + " AB";
+        const amount =
+          Number(t.amount) || 0;
 
-    document.getElementById("balanceDisplay").textContent =
-      data.balance + " AB";
+        const positive =
+          amount > 0;
 
-    const added = data.transactions
-      .filter(t => t.amount > 0)
-      .reduce((sum, t) => sum + t.amount, 0);
-
-    const removed = data.transactions
-      .filter(t => t.amount < 0)
-      .reduce((sum, t) => sum + Math.abs(t.amount), 0);
-
-    document.getElementById("addedStat").textContent =
-      added + " AB";
-
-    document.getElementById("removedStat").textContent =
-      removed + " AB";
-
-    document.getElementById("transactionStat").textContent =
-      data.transactions.length;
+        const time =
+          t.time ||
+          t.date ||
+          t.timestamp ||
+          "";
 
 
-    const list =
-      document.getElementById("activityList");
+        return `
 
-    if (data.transactions.length === 0) {
+          <div class="activity-item">
 
-      list.innerHTML =
-        '<p style="color:#666;font-size:13px;">No transactions yet.</p>';
+            <div>
 
-      return;
-    }
+              <div class="activity-main">
 
+                <span class="${positive ? "increase" : "decrease"}">
 
-    list.innerHTML =
-      data.transactions
-        .slice()
-        .reverse()
-        .slice(0, 10)
-        .map(t => {
+                  ${positive ? "+" : ""}${amount} AB
 
-          const positive = t.amount > 0;
+                </span>
 
-          return `
-            <div class="activity-item">
+                → Balance: ${Number(t.balanceAfter) || 0} AB
 
-              <div>
-                <div class="activity-main">
-
-                  <span class="${positive ? "increase" : "decrease"}">
-                    ${positive ? "+" : ""}${t.amount} AB
-                  </span>
-
-                  → Balance: ${t.balanceAfter} AB
-
-                </div>
-
-                <div class="activity-reason">
-                  ${escapeHTML(t.reason || "No reason provided")}
-                  ${t.game ? " • " + escapeHTML(t.game) : ""}
-                </div>
               </div>
 
-              <div class="activity-time">
-                ${escapeHTML(t.time)}
+
+              <div class="activity-reason">
+
+                ${escapeHTML(
+                  t.reason || "No reason provided"
+                )}
+
+                ${
+                  t.game
+                    ? " • " + escapeHTML(t.game)
+                    : ""
+                }
+
               </div>
 
             </div>
-          `;
-
-        })
-        .join("");
-  }
 
 
-  function changeBucks(direction) {
+            <div class="activity-time">
 
-    const amountInput =
-      document.getElementById("amount");
+              ${escapeHTML(time)}
 
-    const reasonInput =
-      document.getElementById("reason");
+            </div>
 
-    const gameInput =
-      document.getElementById("game");
+          </div>
 
-    const amount =
-      Number(amountInput.value);
+        `;
 
+      })
+      .join("");
 
-    if (!amount || amount <= 0) {
-      showToast("Enter an amount first.");
-      return;
-    }
+}
 
 
-    const change =
-      Math.floor(amount) * direction;
+function changeBucks(direction) {
+
+  const amountInput =
+    document.getElementById("amount");
+
+  const reasonInput =
+    document.getElementById("reason");
+
+  const gameInput =
+    document.getElementById("game");
 
 
-    if (data.balance + change < 0) {
-      showToast("Balance cannot go below 0 AB.");
-      return;
-    }
+  const amount =
+    Math.floor(Number(amountInput.value));
 
 
-    data.balance += change;
-
-
-    data.transactions.push({
-
-      amount: change,
-
-      balanceAfter: data.balance,
-
-      reason: reasonInput.value.trim(),
-
-      game: gameInput.value,
-
-      time: new Date().toLocaleString()
-
-    });
-
-
-    save();
-    updateUI();
-
+  if (!amount || amount <= 0) {
 
     showToast(
-      `${change > 0 ? "+" : ""}${change} AB Bucks applied.`
+      "Enter an amount first."
     );
 
-
-    amountInput.value = "";
-    reasonInput.value = "";
-    gameInput.value = "";
+    return;
 
   }
 
 
-  function quickChange(amount) {
-
-    if (data.balance + amount < 0) {
-      showToast("Balance cannot go below 0 AB.");
-      return;
-    }
+  const change =
+    amount * direction;
 
 
-    data.balance += amount;
-
-
-    data.transactions.push({
-
-      amount: amount,
-
-      balanceAfter: data.balance,
-
-      reason: "Quick action",
-
-      game: "",
-
-      time: new Date().toLocaleString()
-
-    });
-
-
-    save();
-    updateUI();
-
+  if (data.balance + change < 0) {
 
     showToast(
-      `${amount > 0 ? "+" : ""}${amount} AB Bucks applied.`
+      "Balance cannot go below 0 AB."
     );
 
-  }
-
-
-  function showToast(message) {
-
-    const toast =
-      document.getElementById("toast");
-
-    toast.textContent = message;
-
-    toast.classList.add("show");
-
-
-    setTimeout(() => {
-      toast.classList.remove("show");
-    }, 2500);
+    return;
 
   }
 
 
-  function escapeHTML(value) {
-
-    return String(value)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-
-  }
+  data.balance += change;
 
 
-  function logout() {
+  data.transactions.push({
 
-    sessionStorage.removeItem("keyflame_user");
+    id:
+      Date.now() +
+      "-" +
+      Math.random()
+        .toString(36)
+        .slice(2),
 
-    window.location.href = "login.html";
+    amount: change,
 
-  }
+    previousBalance:
+      data.balance - change,
 
+    balanceAfter:
+      data.balance,
+
+    reason:
+      reasonInput.value.trim(),
+
+    game:
+      gameInput.value,
+
+    time:
+      new Date().toLocaleString(),
+
+    timestamp:
+      new Date().toISOString()
+
+  });
+
+
+  save();
 
   updateUI();
+
+
+  showToast(
+    `${change > 0 ? "+" : ""}${change} AB Bucks applied.`
+  );
+
+
+  amountInput.value = "";
+
+  reasonInput.value = "";
+
+  gameInput.value = "";
+
+}
+
+
+function quickChange(amount) {
+
+  amount =
+    Number(amount);
+
+
+  if (data.balance + amount < 0) {
+
+    showToast(
+      "Balance cannot go below 0 AB."
+    );
+
+    return;
+
+  }
+
+
+  data.balance += amount;
+
+
+  data.transactions.push({
+
+    id:
+      Date.now() +
+      "-" +
+      Math.random()
+        .toString(36)
+        .slice(2),
+
+    amount: amount,
+
+    previousBalance:
+      data.balance - amount,
+
+    balanceAfter:
+      data.balance,
+
+    reason:
+      "Quick action",
+
+    game:
+      "",
+
+    time:
+      new Date().toLocaleString(),
+
+    timestamp:
+      new Date().toISOString()
+
+  });
+
+
+  save();
+
+  updateUI();
+
+
+  showToast(
+    `${amount > 0 ? "+" : ""}${amount} AB Bucks applied.`
+  );
+
+}
+
+
+function showToast(message) {
+
+  const toast =
+    document.getElementById("toast");
+
+
+  toast.textContent =
+    message;
+
+
+  toast.classList.add("show");
+
+
+  setTimeout(() => {
+
+    toast.classList.remove("show");
+
+  }, 2500);
+
+}
+
+
+function escapeHTML(value) {
+
+  return String(value)
+
+    .replaceAll("&", "&amp;")
+
+    .replaceAll("<", "&lt;")
+
+    .replaceAll(">", "&gt;")
+
+    .replaceAll('"', "&quot;")
+
+    .replaceAll("'", "&#039;");
+
+}
+
+
+function goAdmin() {
+
+  window.location.href =
+    "admin.html";
+
+}
+
+
+function goBucks() {
+
+  window.location.href =
+    "bucks.html";
+
+}
+
+
+function showComingSoon(section) {
+
+  showToast(
+    section +
+    " will be connected next."
+  );
+
+}
+
+
+function logout() {
+
+  sessionStorage.removeItem(
+    "keyflame_user"
+  );
+
+  window.location.href =
+    "login.html";
+
+}
+
+
+updateUI();
+
+window.addEventListener(
+  "storage",
+  () => {
+
+    data = loadData();
+
+    updateUI();
+
+  }
+);
 
 </script>
 
