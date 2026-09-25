@@ -3,373 +3,719 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Keyflame — Dashboard</title>
+  <title>Dashboard • Keyflame</title>
 
   <style>
+    :root {
+      --bg: #080709;
+      --panel: rgba(20, 16, 21, 0.82);
+      --panel-2: rgba(27, 21, 29, 0.9);
+      --border: rgba(255, 105, 180, 0.18);
+      --pink: #ff5ca8;
+      --pink-light: #ff9dcc;
+      --text: #ffffff;
+      --muted: #aaa3ad;
+      --green: #62e6a7;
+      --red: #ff718f;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: #090809;
-      color: #fff;
+      font-family: Inter, Arial, sans-serif;
+      background:
+        radial-gradient(circle at 80% 10%, rgba(255, 92, 168, 0.12), transparent 28%),
+        radial-gradient(circle at 10% 90%, rgba(255, 92, 168, 0.08), transparent 30%),
+        var(--bg);
+      color: var(--text);
       min-height: 100vh;
     }
 
-    button {
+    button,
+    a,
+    input {
       font: inherit;
-      cursor: pointer;
     }
 
-    .layout {
-      min-height: 100vh;
-      display: flex;
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
     }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Background glow */
+
+    .background-glow {
+      position: fixed;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: rgba(255, 92, 168, 0.055);
+      filter: blur(100px);
+      pointer-events: none;
+      top: -180px;
+      right: -150px;
+      z-index: -1;
+    }
+
+    .background-glow.two {
+      top: auto;
+      right: auto;
+      bottom: -220px;
+      left: -180px;
+    }
+
+    /* Layout */
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
 
     .sidebar {
       width: 250px;
-      background: #0f0d10;
-      border-right: 1px solid #282129;
-      padding: 25px 16px;
+      min-height: 100vh;
       position: fixed;
-      inset: 0 auto 0 0;
-      z-index: 10;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      padding: 24px 16px;
+      background: rgba(10, 8, 11, 0.88);
+      backdrop-filter: blur(22px);
+      border-right: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
     }
 
-    .logo {
-      font-size: 25px;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 8px 10px 28px;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--pink), #ff3f96);
+      box-shadow: 0 0 25px rgba(255, 92, 168, 0.28);
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .brand-name {
+      font-size: 20px;
       font-weight: 800;
-      margin: 5px 12px 35px;
-      letter-spacing: -1px;
-    }
-
-    .logo span {
-      color: #ff4fa3;
+      letter-spacing: -0.5px;
     }
 
     .nav-title {
-      color: #777;
-      font-size: 11px;
+      color: #6f6871;
       text-transform: uppercase;
       letter-spacing: 1.5px;
-      margin: 0 12px 10px;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 0 12px 10px;
     }
 
     .nav {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
     }
 
-    .nav button {
+    .nav-link {
       width: 100%;
-      border: 0;
-      background: transparent;
-      color: #999;
-      padding: 13px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 13px;
       border-radius: 12px;
-      text-align: left;
-      transition: .2s;
+      color: var(--muted);
+      transition: 0.2s ease;
+      cursor: pointer;
+      border: 1px solid transparent;
     }
 
-    .nav button:hover,
-    .nav button.active {
-      background: #21151e;
+    .nav-link:hover {
       color: #fff;
+      background: rgba(255, 92, 168, 0.08);
+      border-color: rgba(255, 92, 168, 0.1);
+      transform: translateX(2px);
     }
 
-    .nav button.active {
-      box-shadow: inset 3px 0 #ff4fa3;
+    .nav-link.active {
+      color: #fff;
+      background: linear-gradient(
+        90deg,
+        rgba(255, 92, 168, 0.16),
+        rgba(255, 92, 168, 0.05)
+      );
+      border-color: rgba(255, 92, 168, 0.16);
+    }
+
+    .nav-icon {
+      width: 20px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .sidebar-bottom {
+      margin-top: auto;
+    }
+
+    .profile-mini {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.025);
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .profile-mini:hover {
+      border-color: rgba(255, 92, 168, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background:
+        linear-gradient(135deg, rgba(255, 92, 168, 0.9), rgba(255, 157, 204, 0.45));
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-mini-text {
+      min-width: 0;
+    }
+
+    .profile-mini-name {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .profile-mini-user {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 2px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .logout {
-      position: absolute;
-      left: 16px;
-      right: 16px;
-      bottom: 25px;
+      color: #a59ea7;
     }
 
-    .logout button {
-      width: 100%;
-      padding: 12px;
-      border-radius: 11px;
-      border: 1px solid #322932;
-      background: #151116;
-      color: #aaa;
+    .logout:hover {
+      color: var(--red);
+      background: rgba(255, 113, 143, 0.08);
     }
 
-    .logout button:hover {
-      color: #fff;
-      border-color: #ff4fa3;
-    }
+    /* Main */
 
     .main {
       margin-left: 250px;
       width: calc(100% - 250px);
-      padding: 35px;
+      padding: 34px;
+      min-height: 100vh;
     }
 
     .topbar {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
+      align-items: flex-start;
       gap: 20px;
+      margin-bottom: 30px;
     }
 
-    .welcome h1 {
-      font-size: 30px;
-      letter-spacing: -1px;
+    .eyebrow {
+      color: var(--pink-light);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 700;
+      margin-bottom: 8px;
     }
 
-    .welcome p {
-      color: #888;
-      margin-top: 7px;
+    h1 {
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.05;
+      letter-spacing: -1.5px;
     }
 
-    .profile-button {
-      border: 1px solid #332a32;
-      background: #141116;
-      color: #ddd;
-      padding: 10px 15px;
-      border-radius: 30px;
+    .subtitle {
+      color: var(--muted);
+      margin-top: 9px;
+      font-size: 14px;
     }
 
-    .profile-button:hover {
-      border-color: #ff4fa3;
+    .top-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      padding: 8px 12px 8px 8px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .top-profile:hover {
+      border-color: rgba(255, 92, 168, 0.4);
+      transform: translateY(-1px);
+    }
+
+    /* Cards */
+
+    .glass {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
     }
 
     .balance-card {
       position: relative;
       overflow: hidden;
-      background: linear-gradient(
-        135deg,
-        #171017,
-        #21131d
-      );
-      border: 1px solid #43263a;
-      border-radius: 22px;
-      padding: 30px;
+      padding: 28px;
       margin-bottom: 20px;
+      background:
+        radial-gradient(
+          circle at 100% 0%,
+          rgba(255, 92, 168, 0.19),
+          transparent 40%
+        ),
+        var(--panel);
     }
 
     .balance-card::after {
       content: "";
       position: absolute;
-      width: 230px;
-      height: 230px;
-      right: -90px;
-      top: -110px;
+      width: 240px;
+      height: 240px;
       border-radius: 50%;
-      background: #ff4fa3;
-      opacity: .08;
-      filter: blur(20px);
+      border: 1px solid rgba(255, 92, 168, 0.08);
+      right: -80px;
+      top: -100px;
     }
 
     .balance-label {
-      color: #aaa;
-      font-size: 14px;
-      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 10px;
     }
 
     .balance {
-      font-size: 52px;
-      font-weight: 800;
-      color: #ff5eaa;
+      font-size: clamp(38px, 6vw, 58px);
+      font-weight: 850;
       letter-spacing: -2px;
+      position: relative;
+      z-index: 1;
     }
 
-    .balance-note {
-      color: #777;
-      font-size: 13px;
-      margin-top: 10px;
+    .currency {
+      color: var(--pink);
+      font-size: 0.7em;
+      margin-right: 5px;
     }
+
+    .balance-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-top: 15px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .balance-change {
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .view-bucks {
+      border: 1px solid rgba(255, 92, 168, 0.3);
+      background: rgba(255, 92, 168, 0.08);
+      color: #fff;
+      padding: 10px 15px;
+      border-radius: 11px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .view-bucks:hover {
+      background: rgba(255, 92, 168, 0.16);
+      transform: translateY(-1px);
+    }
+
+    /* Stats */
 
     .stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+      gap: 15px;
       margin-bottom: 20px;
     }
 
-    .card {
-      background: #111012;
-      border: 1px solid #282329;
-      border-radius: 18px;
-      padding: 22px;
+    .stat-card {
+      padding: 20px;
     }
 
     .stat-label {
-      color: #888;
-      font-size: 13px;
-      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 9px;
     }
 
     .stat-value {
       font-size: 25px;
-      font-weight: 700;
+      font-weight: 800;
+      letter-spacing: -0.6px;
     }
 
     .green {
-      color: #62d99a;
+      color: var(--green);
     }
 
     .red {
-      color: #ff6f8f;
+      color: var(--red);
     }
 
-    .content-grid {
+    /* Sections */
+
+    .section-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1.15fr 0.85fr;
       gap: 20px;
     }
 
-    .card h2 {
-      font-size: 19px;
-      margin-bottom: 7px;
+    .section {
+      padding: 22px;
+      min-width: 0;
     }
 
-    .sub {
-      color: #777;
-      font-size: 13px;
-      margin-bottom: 20px;
-    }
-
-    .transaction {
+    .section-heading {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      padding: 15px 0;
-      border-bottom: 1px solid #242025;
-      gap: 15px;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 18px;
     }
 
-    .transaction:last-child {
-      border-bottom: 0;
+    .section-title {
+      font-size: 17px;
+      font-weight: 800;
     }
 
-    .transaction-name {
+    .section-link {
+      color: var(--pink-light);
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .section-link:hover {
+      color: #fff;
+    }
+
+    /* Activity */
+
+    .activity-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .activity {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .activity-icon {
+      width: 35px;
+      height: 35px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
       font-size: 14px;
+      font-weight: 900;
+      flex-shrink: 0;
     }
 
-    .transaction-time {
-      color: #666;
-      font-size: 11px;
-      margin-top: 5px;
+    .activity-icon.add {
+      color: var(--green);
+      background: rgba(98, 230, 167, 0.1);
     }
 
-    .transaction-amount {
+    .activity-icon.remove {
+      color: var(--red);
+      background: rgba(255, 113, 143, 0.1);
+    }
+
+    .activity-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .activity-reason {
+      font-size: 13px;
       font-weight: 700;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .activity-time {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 3px;
+    }
+
+    .activity-amount {
+      font-weight: 800;
+      font-size: 13px;
       white-space: nowrap;
     }
 
     .empty {
-      color: #666;
+      color: var(--muted);
+      text-align: center;
+      padding: 30px 10px;
       font-size: 13px;
     }
 
+    /* Games */
+
+    .game-preview {
+      padding: 0;
+      overflow: hidden;
+    }
+
     .game-card {
-      background: #0b0a0c;
-      border: 1px solid #272329;
-      border-radius: 14px;
-      padding: 17px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
-      transition: .2s;
+      gap: 14px;
+      padding: 14px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      cursor: pointer;
+      transition: 0.2s ease;
     }
 
     .game-card:hover {
-      border-color: #ff4fa3;
-      transform: translateY(-1px);
+      transform: translateY(-2px);
+      border-color: rgba(255, 92, 168, 0.28);
+      background: rgba(255, 92, 168, 0.05);
+    }
+
+    .game-image {
+      width: 62px;
+      height: 62px;
+      border-radius: 13px;
+      background:
+        linear-gradient(135deg, rgba(255, 92, 168, 0.4), rgba(255, 92, 168, 0.05)),
+        #151116;
+      display: grid;
+      place-items: center;
+      font-size: 25px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .game-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .game-info {
+      min-width: 0;
+      flex: 1;
     }
 
     .game-name {
-      font-weight: 600;
+      font-weight: 800;
+      font-size: 14px;
     }
 
     .game-description {
-      color: #777;
-      font-size: 12px;
-      margin-top: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 4px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
-    .open-game {
-      background: #21151e;
-      border: 1px solid #45263b;
-      color: #ff76b6;
-      padding: 8px 11px;
-      border-radius: 9px;
+    .arrow {
+      color: #6f6871;
+      font-size: 20px;
     }
 
-    .games-button {
-      width: 100%;
-      margin-top: 12px;
-      padding: 12px;
-      border-radius: 11px;
-      border: 1px solid #342932;
-      background: #151116;
-      color: #ddd;
+    /* Toast */
+
+    .toast {
+      position: fixed;
+      right: 25px;
+      bottom: 25px;
+      padding: 13px 17px;
+      border-radius: 13px;
+      background: #171217;
+      border: 1px solid rgba(255, 92, 168, 0.3);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+      color: #fff;
+      font-size: 13px;
+      opacity: 0;
+      transform: translateY(15px);
+      pointer-events: none;
+      transition: 0.25s ease;
+      z-index: 500;
     }
 
-    .games-button:hover {
-      border-color: #ff4fa3;
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Mobile */
+
+    .mobile-header {
+      display: none;
     }
 
     @media (max-width: 950px) {
-      .sidebar {
-        width: 210px;
-      }
-
-      .main {
-        margin-left: 210px;
-        width: calc(100% - 210px);
-        padding: 25px;
-      }
-
-      .content-grid {
+      .section-grid {
         grid-template-columns: 1fr;
       }
     }
 
-    @media (max-width: 700px) {
-      .layout {
-        display: block;
-      }
-
+    @media (max-width: 750px) {
       .sidebar {
-        position: static;
+        position: fixed;
         width: 100%;
-        border-right: 0;
-        border-bottom: 1px solid #282129;
+        height: auto;
+        min-height: 0;
+        bottom: auto;
+        right: 0;
+        padding: 10px 12px;
+        flex-direction: row;
+        align-items: center;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
       }
 
-      .logout {
-        position: static;
-        margin-top: 20px;
+      .brand {
+        padding: 0;
+      }
+
+      .brand-name {
+        font-size: 17px;
+      }
+
+      .brand-mark {
+        width: 34px;
+        height: 34px;
+      }
+
+      .nav-title,
+      .sidebar-bottom,
+      .nav-link span:not(.nav-icon) {
+        display: none;
+      }
+
+      .nav {
+        margin-left: auto;
+        flex-direction: row;
+        gap: 3px;
+      }
+
+      .nav-link {
+        width: 38px;
+        height: 38px;
+        padding: 0;
+        justify-content: center;
       }
 
       .main {
         margin-left: 0;
         width: 100%;
-        padding: 20px;
+        padding: 85px 16px 25px;
+      }
+
+      .topbar {
+        margin-bottom: 22px;
+      }
+
+      .top-profile {
+        display: none;
       }
 
       .stats {
         grid-template-columns: 1fr;
       }
 
-      .topbar {
+      .balance-card {
+        padding: 22px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .balance-footer {
         align-items: flex-start;
         flex-direction: column;
       }
 
-      .balance {
-        font-size: 42px;
+      .section {
+        padding: 17px;
+      }
+
+      .game-image {
+        width: 54px;
+        height: 54px;
       }
     }
   </style>
@@ -377,333 +723,782 @@
 
 <body>
 
-<div class="layout">
+  <div class="background-glow"></div>
+  <div class="background-glow two"></div>
 
-  <aside class="sidebar">
+  <div class="app">
 
-    <div class="logo">
-      Key<span>flame</span>
-    </div>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
 
-    <div class="nav-title">Menu</div>
+      <a href="index.html" class="brand">
+        <div class="brand-mark">K</div>
+        <div class="brand-name">Keyflame</div>
+      </a>
 
-    <nav class="nav">
+      <div class="nav-title">Menu</div>
 
-      <button class="active" onclick="goDashboard()">
-        Dashboard
-      </button>
+      <nav class="nav">
 
-      <button onclick="goGames()">
-        Games
-      </button>
+        <a href="dashboard.html" class="nav-link active">
+          <span class="nav-icon">⌂</span>
+          <span>Dashboard</span>
+        </a>
 
-      <button onclick="goBucks()">
-        AB Bucks
-      </button>
+        <a href="games.html" class="nav-link">
+          <span class="nav-icon">▣</span>
+          <span>Games</span>
+        </a>
 
-      <button onclick="showComingSoon('History')">
-        History
-      </button>
+        <a href="bucks.html" class="nav-link">
+          <span class="nav-icon">¥</span>
+          <span>AB Bucks</span>
+        </a>
 
-      <button onclick="showComingSoon('Analytics')">
-        Analytics
-      </button>
+        <a href="history.html" class="nav-link">
+          <span class="nav-icon">↺</span>
+          <span>History</span>
+        </a>
 
-      <button onclick="showComingSoon('Profile')">
-        Profile
-      </button>
+        <a href="analytics.html" class="nav-link">
+          <span class="nav-icon">⌁</span>
+          <span>Analytics</span>
+        </a>
 
-    </nav>
+        <a href="profile.html" class="nav-link">
+          <span class="nav-icon">◉</span>
+          <span>Profile</span>
+        </a>
 
-    <div class="logout">
-      <button onclick="logout()">
-        Log Out
-      </button>
-    </div>
+        <a href="settings.html" class="nav-link">
+          <span class="nav-icon">⚙</span>
+          <span>Settings</span>
+        </a>
 
-  </aside>
+      </nav>
 
-  <main class="main">
+      <div class="sidebar-bottom">
 
-    <div class="topbar">
+        <a href="profile.html" class="profile-mini" id="sidebarProfile">
+          <div class="avatar" id="sidebarAvatar">K</div>
 
-      <div class="welcome">
-        <h1>Welcome back.</h1>
-        <p>Your Keyflame dashboard.</p>
+          <div class="profile-mini-text">
+            <div class="profile-mini-name" id="sidebarName">Kian</div>
+            <div class="profile-mini-user" id="sidebarUsername">kian6203</div>
+          </div>
+        </a>
+
+        <a href="#" class="nav-link logout" id="logoutBtn">
+          <span class="nav-icon">↪</span>
+          <span>Logout</span>
+        </a>
+
       </div>
 
-      <button
-        class="profile-button"
-        onclick="showComingSoon('Profile')"
-      >
-        Brother
-      </button>
+    </aside>
 
-    </div>
+    <!-- MAIN -->
+    <main class="main">
 
-    <section class="balance-card">
+      <header class="topbar">
 
-      <div class="balance-label">
-        Your AB Bucks
-      </div>
+        <div>
+          <div class="eyebrow">AB Server</div>
+          <h1 id="welcomeTitle">Welcome back, Kian.</h1>
+          <p class="subtitle">
+            Here's what's happening with your Keyflame account.
+          </p>
+        </div>
 
-      <div class="balance" id="balance">
-        0 AB
-      </div>
+        <a href="profile.html" class="top-profile">
 
-      <div class="balance-note">
-        Your current AB Server balance
-      </div>
+          <div class="avatar" id="topAvatar">K</div>
 
-    </section>
+          <div>
+            <div style="font-size:13px;font-weight:800;" id="topName">
+              Kian
+            </div>
 
-    <section class="stats">
+            <div style="font-size:11px;color:var(--muted);" id="topUsername">
+              kian6203
+            </div>
+          </div>
 
-      <div class="card">
-        <div class="stat-label">Total Earned</div>
-        <div class="stat-value green" id="earned">0 AB</div>
-      </div>
+        </a>
 
-      <div class="card">
-        <div class="stat-label">Total Lost</div>
-        <div class="stat-value red" id="lost">0 AB</div>
-      </div>
+      </header>
 
-      <div class="card">
-        <div class="stat-label">Transactions</div>
-        <div class="stat-value" id="transactions">0</div>
-      </div>
+      <!-- BALANCE -->
+      <section class="glass balance-card">
 
-    </section>
+        <div class="balance-label">
+          Current AB Bucks
+        </div>
 
-    <section class="content-grid">
+        <div class="balance" id="balance">
+          <span class="currency">¥</span>0
+        </div>
 
-      <div class="card">
+        <div class="balance-footer">
 
-        <h2>Recent Activity</h2>
+          <div class="balance-change" id="balanceChange">
+            No recent changes
+          </div>
 
-        <p class="sub">
-          Your latest AB Bucks changes.
-        </p>
+          <a href="bucks.html" class="view-bucks">
+            View AB Bucks →
+          </a>
 
-        <div id="history">
+        </div>
 
+      </section>
+
+      <!-- STATS -->
+      <section class="stats">
+
+        <div class="glass stat-card">
+          <div class="stat-label">Total Earned</div>
+          <div class="stat-value green" id="earned">
+            ¥0
+          </div>
+        </div>
+
+        <div class="glass stat-card">
+          <div class="stat-label">Total Lost</div>
+          <div class="stat-value red" id="lost">
+            ¥0
+          </div>
+        </div>
+
+        <div class="glass stat-card">
+          <div class="stat-label">Transactions</div>
+          <div class="stat-value" id="transactions">
+            0
+          </div>
+        </div>
+
+      </section>
+
+      <!-- LOWER SECTIONS -->
+      <section class="section-grid">
+
+        <!-- ACTIVITY -->
+        <div class="glass section">
+
+          <div class="section-heading">
+
+            <div class="section-title">
+              Recent Activity
+            </div>
+
+            <a href="history.html" class="section-link">
+              View all →
+            </a>
+
+          </div>
+
+          <div class="activity-list" id="activityList">
+            <div class="empty">
+              No AB Bucks activity yet.
+            </div>
+          </div>
+
+        </div>
+
+        <!-- GAMES -->
+        <div class="glass section">
+
+          <div class="section-heading">
+
+            <div class="section-title">
+              Your Games
+            </div>
+
+            <a href="games.html" class="section-link">
+              View all →
+            </a>
+
+          </div>
+
+          <div id="gamePreview">
+
+            <a href="games.html" class="game-card">
+
+              <div class="game-image">
+                🎮
+              </div>
+
+              <div class="game-info">
+
+                <div class="game-name">
+                  Your Games
+                </div>
+
+                <div class="game-description">
+                  Open Games to view and manage your games.
+                </div>
+
+              </div>
+
+              <div class="arrow">
+                →
+              </div>
+
+            </a>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+
+    /* --------------------------------
+       PROFILE
+    -------------------------------- */
+
+    const defaultProfile = {
+      name: "Kian",
+      username: "kian6203",
+      picture: ""
+    };
+
+    function loadProfile() {
+
+      let profile = defaultProfile;
+
+      try {
+
+        const saved =
+          JSON.parse(localStorage.getItem("keyflame_profile"));
+
+        if (saved && typeof saved === "object") {
+          profile = {
+            ...defaultProfile,
+            ...saved
+          };
+        }
+
+      } catch (error) {
+        console.log("Profile data could not be loaded.");
+      }
+
+      const name =
+        profile.name?.trim() || "Kian";
+
+      const username =
+        profile.username?.trim() || "kian6203";
+
+      document.getElementById("welcomeTitle").textContent =
+        `Welcome back, ${name}.`;
+
+      document.getElementById("sidebarName").textContent =
+        name;
+
+      document.getElementById("sidebarUsername").textContent =
+        username;
+
+      document.getElementById("topName").textContent =
+        name;
+
+      document.getElementById("topUsername").textContent =
+        username;
+
+      setAvatar("sidebarAvatar", profile.picture, name);
+      setAvatar("topAvatar", profile.picture, name);
+
+      return profile;
+    }
+
+    function setAvatar(id, picture, name) {
+
+      const element =
+        document.getElementById(id);
+
+      if (!element) return;
+
+      if (picture) {
+
+        element.innerHTML =
+          `<img src="${picture}" alt="${escapeHTML(name)}">`;
+
+      } else {
+
+        element.textContent =
+          name.charAt(0).toUpperCase();
+
+      }
+    }
+
+
+    /* --------------------------------
+       AB BUCKS DATA
+    -------------------------------- */
+
+    const STORAGE_KEY =
+      "keyflame_admin_data";
+
+    function loadData() {
+
+      const fallback = {
+        balance: 0,
+        transactions: []
+      };
+
+      try {
+
+        const saved =
+          JSON.parse(localStorage.getItem(STORAGE_KEY));
+
+        if (!saved || typeof saved !== "object") {
+          return fallback;
+        }
+
+        return {
+          balance:
+            Number(saved.balance) || 0,
+
+          transactions:
+            Array.isArray(saved.transactions)
+              ? saved.transactions
+              : []
+        };
+
+      } catch (error) {
+
+        return fallback;
+
+      }
+
+    }
+
+
+    /* --------------------------------
+       UPDATE DASHBOARD
+    -------------------------------- */
+
+    function updateDashboard() {
+
+      const data = loadData();
+
+      const transactions =
+        [...data.transactions]
+          .sort((a, b) => {
+            return getTimestamp(b) - getTimestamp(a);
+          });
+
+      const balance =
+        Number(data.balance) || 0;
+
+      let earned = 0;
+      let lost = 0;
+
+      transactions.forEach(transaction => {
+
+        const amount =
+          Number(transaction.amount) || 0;
+
+        if (amount > 0) {
+          earned += amount;
+        } else if (amount < 0) {
+          lost += Math.abs(amount);
+        }
+
+      });
+
+      document.getElementById("balance").innerHTML =
+        `<span class="currency">¥</span>${formatNumber(balance)}`;
+
+      document.getElementById("earned").textContent =
+        `¥${formatNumber(earned)}`;
+
+      document.getElementById("lost").textContent =
+        `¥${formatNumber(lost)}`;
+
+      document.getElementById("transactions").textContent =
+        transactions.length;
+
+      updateBalanceChange(transactions);
+
+      renderActivity(transactions);
+
+      loadGames();
+
+    }
+
+
+    /* --------------------------------
+       BALANCE CHANGE
+    -------------------------------- */
+
+    function updateBalanceChange(transactions) {
+
+      const element =
+        document.getElementById("balanceChange");
+
+      if (!transactions.length) {
+
+        element.textContent =
+          "No recent changes";
+
+        element.style.color =
+          "var(--muted)";
+
+        return;
+      }
+
+      const latest =
+        transactions[0];
+
+      const amount =
+        Number(latest.amount) || 0;
+
+      if (amount > 0) {
+
+        element.textContent =
+          `+¥${formatNumber(amount)} recently`;
+
+        element.style.color =
+          "var(--green)";
+
+      } else {
+
+        element.textContent =
+          `-¥${formatNumber(Math.abs(amount))} recently`;
+
+        element.style.color =
+          "var(--red)";
+
+      }
+
+    }
+
+
+    /* --------------------------------
+       ACTIVITY
+    -------------------------------- */
+
+    function renderActivity(transactions) {
+
+      const container =
+        document.getElementById("activityList");
+
+      const recent =
+        transactions.slice(0, 5);
+
+      if (!recent.length) {
+
+        container.innerHTML = `
           <div class="empty">
             No AB Bucks activity yet.
           </div>
+        `;
 
-        </div>
+        return;
 
-      </div>
+      }
 
-      <div class="card">
+      container.innerHTML =
+        recent.map(transaction => {
 
-        <h2>Your Games</h2>
+          const amount =
+            Number(transaction.amount) || 0;
 
-        <p class="sub">
-          Games you play on the AB Server.
-        </p>
+          const positive =
+            amount >= 0;
 
-        <div class="game-card">
+          const reason =
+            transaction.reason ||
+            (positive ? "AB Bucks added" : "AB Bucks removed");
 
-          <div>
+          const game =
+            transaction.game ||
+            "";
+
+          const time =
+            formatDate(transaction);
+
+          return `
+            <a href="history.html" class="activity">
+
+              <div class="activity-icon ${positive ? "add" : "remove"}">
+                ${positive ? "+" : "−"}
+              </div>
+
+              <div class="activity-info">
+
+                <div class="activity-reason">
+                  ${escapeHTML(reason)}
+                </div>
+
+                <div class="activity-time">
+                  ${escapeHTML(game ? game + " • " : "")}${escapeHTML(time)}
+                </div>
+
+              </div>
+
+              <div class="activity-amount ${positive ? "green" : "red"}">
+                ${positive ? "+" : "−"}¥${formatNumber(Math.abs(amount))}
+              </div>
+
+            </a>
+          `;
+
+        }).join("");
+
+    }
+
+
+    /* --------------------------------
+       GAMES
+    -------------------------------- */
+
+    function loadGames() {
+
+      const container =
+        document.getElementById("gamePreview");
+
+      let games = [];
+
+      try {
+
+        const saved =
+          JSON.parse(localStorage.getItem("keyflame_games"));
+
+        if (Array.isArray(saved)) {
+          games = saved;
+        }
+
+      } catch (error) {
+
+        games = [];
+
+      }
+
+      if (!games.length) {
+
+        container.innerHTML = `
+          <a href="games.html" class="game-card">
+
+            <div class="game-image">
+              🎮
+            </div>
+
+            <div class="game-info">
+
+              <div class="game-name">
+                Your Games
+              </div>
+
+              <div class="game-description">
+                Open Games to view and manage your games.
+              </div>
+
+            </div>
+
+            <div class="arrow">
+              →
+            </div>
+
+          </a>
+        `;
+
+        return;
+      }
+
+      const game =
+        games[0];
+
+      const image =
+        game.image
+          ? `<img src="${game.image}" alt="">`
+          : "🎮";
+
+      container.innerHTML = `
+        <a href="games.html" class="game-card">
+
+          <div class="game-image">
+            ${image}
+          </div>
+
+          <div class="game-info">
 
             <div class="game-name">
-              Rip-Off Minecraft
+              ${escapeHTML(game.name || "Untitled Game")}
             </div>
 
             <div class="game-description">
-              Your real-life Minecraft game.
+              ${escapeHTML(
+                game.description ||
+                "Open to view your games."
+              )}
             </div>
 
           </div>
 
-          <button
-            class="open-game"
-            onclick="openGame('Rip-Off Minecraft')"
-          >
-            Open
-          </button>
-
-        </div>
-
-        <button
-          class="games-button"
-          onclick="goGames()"
-        >
-          View All Games
-        </button>
-
-      </div>
-
-    </section>
-
-  </main>
-
-</div>
-
-<script>
-
-const STORAGE_KEY = "keyflame_admin_data";
-
-function loadData() {
-
-  const saved = localStorage.getItem(STORAGE_KEY);
-
-  if (!saved) {
-    return {
-      balance: 0,
-      transactions: []
-    };
-  }
-
-  try {
-    return JSON.parse(saved);
-  } catch {
-    return {
-      balance: 0,
-      transactions: []
-    };
-  }
-
-}
-
-function updateDashboard() {
-
-  const data = loadData();
-
-  document.getElementById("balance").textContent =
-    data.balance + " AB";
-
-  const earned =
-    data.transactions
-      .filter(t => t.amount > 0)
-      .reduce((sum, t) => sum + t.amount, 0);
-
-  const lost =
-    data.transactions
-      .filter(t => t.amount < 0)
-      .reduce((sum, t) => sum + Math.abs(t.amount), 0);
-
-  document.getElementById("earned").textContent =
-    earned + " AB";
-
-  document.getElementById("lost").textContent =
-    lost + " AB";
-
-  document.getElementById("transactions").textContent =
-    data.transactions.length;
-
-  const history =
-    document.getElementById("history");
-
-  if (data.transactions.length === 0) {
-
-    history.innerHTML =
-      '<div class="empty">No AB Bucks activity yet.</div>';
-
-    return;
-  }
-
-  history.innerHTML =
-    data.transactions
-      .slice()
-      .reverse()
-      .slice(0, 5)
-      .map(t => {
-
-        const positive = t.amount > 0;
-
-        return `
-          <div class="transaction">
-
-            <div>
-
-              <div class="transaction-name">
-                ${escapeHTML(
-                  t.reason || "AB Bucks change"
-                )}
-              </div>
-
-              <div class="transaction-time">
-                ${escapeHTML(t.time || "")}
-              </div>
-
-            </div>
-
-            <div
-              class="transaction-amount
-              ${positive ? "green" : "red"}"
-            >
-              ${positive ? "+" : ""}
-              ${t.amount} AB
-            </div>
-
+          <div class="arrow">
+            →
           </div>
-        `;
 
-      })
-      .join("");
+        </a>
+      `;
 
-}
+    }
 
-function escapeHTML(value) {
 
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+    /* --------------------------------
+       DATE HELPERS
+    -------------------------------- */
 
-}
+    function getTimestamp(transaction) {
 
-function goDashboard() {
+      if (transaction.timestamp) {
 
-  window.location.href = "dashboard.html";
+        const timestamp =
+          new Date(transaction.timestamp).getTime();
 
-}
+        if (!isNaN(timestamp)) {
+          return timestamp;
+        }
 
-function goGames() {
+      }
 
-  window.location.href = "games.html";
+      if (transaction.time) {
 
-}
+        const time =
+          new Date(transaction.time).getTime();
 
-function goBucks() {
+        if (!isNaN(time)) {
+          return time;
+        }
 
-  window.location.href = "bucks.html";
+      }
 
-}
+      if (transaction.date) {
 
-function openGame(name) {
+        const date =
+          new Date(transaction.date).getTime();
 
-  window.location.href = "games.html";
+        if (!isNaN(date)) {
+          return date;
+        }
 
-}
+      }
 
-function showComingSoon(section) {
+      return 0;
+    }
 
-  alert(
-    section +
-    " will be connected when we build that section."
-  );
 
-}
+    function formatDate(transaction) {
 
-function logout() {
+      const timestamp =
+        getTimestamp(transaction);
 
-  sessionStorage.removeItem("keyflame_user");
+      if (!timestamp) {
+        return "Unknown date";
+      }
 
-  window.location.href = "login.html";
+      return new Date(timestamp).toLocaleString(
+        undefined,
+        {
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "2-digit"
+        }
+      );
 
-}
+    }
 
-updateDashboard();
 
-window.addEventListener("storage", updateDashboard);
+    /* --------------------------------
+       NUMBER FORMAT
+    -------------------------------- */
 
-</script>
+    function formatNumber(number) {
+
+      return Number(number || 0)
+        .toLocaleString("en-US", {
+          maximumFractionDigits: 2
+        });
+
+    }
+
+
+    /* --------------------------------
+       HTML ESCAPE
+    -------------------------------- */
+
+    function escapeHTML(value) {
+
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    }
+
+
+    /* --------------------------------
+       LOGOUT
+    -------------------------------- */
+
+    document
+      .getElementById("logoutBtn")
+      .addEventListener("click", function(event) {
+
+        event.preventDefault();
+
+        sessionStorage.removeItem(
+          "keyflame_user"
+        );
+
+        window.location.href =
+          "login.html";
+
+      });
+
+
+    /* --------------------------------
+       STORAGE UPDATES
+    -------------------------------- */
+
+    window.addEventListener(
+      "storage",
+      function(event) {
+
+        if (
+          event.key === STORAGE_KEY ||
+          event.key === "keyflame_profile" ||
+          event.key === "keyflame_games"
+        ) {
+
+          loadProfile();
+          updateDashboard();
+
+        }
+
+      }
+    );
+
+
+    /* --------------------------------
+       START
+    -------------------------------- */
+
+    loadProfile();
+    updateDashboard();
+
+  </script>
 
 </body>
 </html>
