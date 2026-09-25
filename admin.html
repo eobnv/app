@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keyflame — Admin</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #090809;
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+
+    .sidebar {
+      width: 250px;
+      background: #0f0d10;
+      border-right: 1px solid #282129;
+      padding: 25px 16px;
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: 800;
+      margin: 5px 12px 35px;
+      letter-spacing: -1px;
+    }
+
+    .logo span {
+      color: #ff4fa3;
+    }
+
+    .nav-title {
+      color: #777;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin: 0 12px 10px;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .nav button {
+      border: 0;
+      background: transparent;
+      color: #999;
+      padding: 13px 14px;
+      border-radius: 12px;
+      text-align: left;
+      transition: .2s;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: #21151e;
+      color: #fff;
+    }
+
+    .nav button.active {
+      box-shadow: inset 3px 0 #ff4fa3;
+    }
+
+    .logout {
+      position: absolute;
+      bottom: 25px;
+      left: 16px;
+      right: 16px;
+    }
+
+    .logout button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 11px;
+      border: 1px solid #322932;
+      background: #151116;
+      color: #aaa;
+    }
+
+    /* MAIN */
+
+    .main {
+      margin-left: 250px;
+      width: calc(100% - 250px);
+      padding: 35px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      gap: 20px;
+    }
+
+    .topbar h1 {
+      font-size: 30px;
+    }
+
+    .topbar p {
+      color: #888;
+      margin-top: 6px;
+    }
+
+    .admin-badge {
+      background: #21151e;
+      border: 1px solid #45263b;
+      color: #ff76b6;
+      padding: 9px 14px;
+      border-radius: 30px;
+      font-size: 13px;
+    }
+
+    /* CARDS */
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .card {
+      background: #111012;
+      border: 1px solid #282329;
+      border-radius: 18px;
+      padding: 22px;
+    }
+
+    .stat-label {
+      color: #888;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    .stat-value {
+      font-size: 27px;
+      font-weight: 700;
+    }
+
+    .pink {
+      color: #ff5eaa;
+    }
+
+    /* CONTENT */
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.3fr .7fr;
+      gap: 20px;
+    }
+
+    .card h2 {
+      font-size: 19px;
+      margin-bottom: 7px;
+    }
+
+    .sub {
+      color: #777;
+      font-size: 13px;
+      margin-bottom: 22px;
+    }
+
+    .brother {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0b0a0c;
+      border: 1px solid #242025;
+      padding: 17px;
+      border-radius: 14px;
+      margin-bottom: 20px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .avatar {
+      width: 43px;
+      height: 43px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #2a1725;
+      color: #ff70b2;
+      font-weight: bold;
+    }
+
+    .username {
+      font-weight: 600;
+    }
+
+    .role {
+      color: #777;
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .balance {
+      font-size: 22px;
+      font-weight: 700;
+      color: #ff5eaa;
+    }
+
+    /* FORM */
+
+    label {
+      display: block;
+      color: #aaa;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      background: #0b0a0c;
+      border: 1px solid #302a30;
+      color: #fff;
+      border-radius: 11px;
+      padding: 12px 13px;
+      outline: none;
+      margin-bottom: 15px;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #ff4fa3;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .amount-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .action-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 5px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 11px;
+      padding: 13px;
+      font-weight: 700;
+      transition: .2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.1);
+    }
+
+    .add {
+      background: #ff4fa3;
+      color: white;
+    }
+
+    .remove {
+      background: #24151e;
+      color: #ff76b6;
+      border: 1px solid #48263a;
+    }
+
+    /* ACTIVITY */
+
+    .activity {
+      margin-top: 20px;
+    }
+
+    .activity-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 15px 0;
+      border-bottom: 1px solid #242025;
+    }
+
+    .activity-item:last-child {
+      border-bottom: 0;
+    }
+
+    .activity-main {
+      font-size: 14px;
+    }
+
+    .activity-reason {
+      color: #777;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    .activity-time {
+      color: #666;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .increase {
+      color: #62d99a;
+    }
+
+    .decrease {
+      color: #ff6f8f;
+    }
+
+    /* QUICK ACTIONS */
+
+    .quick {
+      display: grid;
+      gap: 10px;
+    }
+
+    .quick button {
+      text-align: left;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid #2a252b;
+      background: #0c0b0d;
+      color: #ddd;
+    }
+
+    .quick button:hover {
+      border-color: #ff4fa3;
+      background: #171016;
+    }
+
+    /* TOAST */
+
+    .toast {
+      position: fixed;
+      right: 25px;
+      bottom: 25px;
+      background: #181318;
+      border: 1px solid #4a2a3d;
+      padding: 14px 18px;
+      border-radius: 12px;
+      opacity: 0;
+      transform: translateY(15px);
+      pointer-events: none;
+      transition: .25s;
+      z-index: 100;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 900px) {
+      .sidebar {
+        width: 210px;
+      }
+
+      .main {
+        margin-left: 210px;
+        width: calc(100% - 210px);
+        padding: 22px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid #282129;
+      }
+
+      .layout {
+        display: block;
+      }
+
+      .logout {
+        position: static;
+        margin-top: 20px;
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .stats {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="logo">Key<span>flame</span></div>
+
+    <div class="nav-title">Admin</div>
+
+    <nav class="nav">
+      <button class="active">Dashboard</button>
+      <button>Users</button>
+      <button>AB Bucks</button>
+      <button>History</button>
+      <button>Analytics</button>
+      <button>Admin Panel</button>
+      <button>Settings</button>
+    </nav>
+
+    <div class="logout">
+      <button onclick="logout()">Log Out</button>
+    </div>
+  </aside>
+
+
+  <main class="main">
+
+    <div class="topbar">
+      <div>
+        <h1>Admin Dashboard</h1>
+        <p>Manage the AB Server.</p>
+      </div>
+
+      <div class="admin-badge">ADMIN</div>
+    </div>
+
+
+    <!-- STATS -->
+
+    <section class="stats">
+
+      <div class="card">
+        <div class="stat-label">Brother's Balance</div>
+        <div class="stat-value pink" id="balanceStat">0 AB</div>
+      </div>
+
+      <div class="card">
+        <div class="stat-label">Total Added</div>
+        <div class="stat-value" id="addedStat">0 AB</div>
+      </div>
+
+      <div class="card">
+        <div class="stat-label">Total Removed</div>
+        <div class="stat-value" id="removedStat">0 AB</div>
+      </div>
+
+      <div class="card">
+        <div class="stat-label">Transactions</div>
+        <div class="stat-value" id="transactionStat">0</div>
+      </div>
+
+    </section>
+
+
+    <section class="grid">
+
+      <!-- AB BUCKS -->
+
+      <div class="card">
+
+        <h2>AB Bucks Management</h2>
+        <p class="sub">Change your brother's AB Bucks balance.</p>
+
+        <div class="brother">
+
+          <div class="user-info">
+
+            <div class="avatar">B</div>
+
+            <div>
+              <div class="username">Brother</div>
+              <div class="role">Regular User</div>
+            </div>
+
+          </div>
+
+          <div class="balance" id="balanceDisplay">0 AB</div>
+
+        </div>
+
+
+        <label for="amount">Amount</label>
+        <input
+          id="amount"
+          type="number"
+          min="1"
+          placeholder="Enter amount"
+        >
+
+
+        <label for="reason">Reason / Note</label>
+        <textarea
+          id="reason"
+          placeholder="Why are you adding or removing AB Bucks?"
+        ></textarea>
+
+
+        <label for="game">Related Game (optional)</label>
+
+        <select id="game">
+          <option value="">No game selected</option>
+          <option value="Rip-Off Minecraft">Rip-Off Minecraft</option>
+        </select>
+
+
+        <div class="action-row">
+
+          <button class="btn add" onclick="changeBucks(1)">
+            + Add AB Bucks
+          </button>
+
+          <button class="btn remove" onclick="changeBucks(-1)">
+            − Remove AB Bucks
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- QUICK ACTIONS -->
+
+      <div class="card">
+
+        <h2>Quick Actions</h2>
+        <p class="sub">Common AB Bucks actions.</p>
+
+        <div class="quick">
+
+          <button onclick="quickChange(10)">
+            +10 AB Bucks
+          </button>
+
+          <button onclick="quickChange(25)">
+            +25 AB Bucks
+          </button>
+
+          <button onclick="quickChange(50)">
+            +50 AB Bucks
+          </button>
+
+          <button onclick="quickChange(-10)">
+            −10 AB Bucks
+          </button>
+
+          <button onclick="quickChange(-25)">
+            −25 AB Bucks
+          </button>
+
+          <button onclick="quickChange(-50)">
+            −50 AB Bucks
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- RECENT ACTIVITY -->
+
+    <section class="card activity">
+
+      <h2>Recent Activity</h2>
+      <p class="sub">Recent AB Bucks changes.</p>
+
+      <div id="activityList">
+        <p style="color:#666;font-size:13px;">
+          No transactions yet.
+        </p>
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+
+  const STORAGE_KEY = "keyflame_admin_data";
+
+  let data = JSON.parse(
+    localStorage.getItem(STORAGE_KEY)
+  ) || {
+    balance: 0,
+    transactions: []
+  };
+
+
+  function save() {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(data)
+    );
+  }
+
+
+  function updateUI() {
+
+    document.getElementById("balanceStat").textContent =
+      data.balance + " AB";
+
+    document.getElementById("balanceDisplay").textContent =
+      data.balance + " AB";
+
+    const added = data.transactions
+      .filter(t => t.amount > 0)
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    const removed = data.transactions
+      .filter(t => t.amount < 0)
+      .reduce((sum, t) => sum + Math.abs(t.amount), 0);
+
+    document.getElementById("addedStat").textContent =
+      added + " AB";
+
+    document.getElementById("removedStat").textContent =
+      removed + " AB";
+
+    document.getElementById("transactionStat").textContent =
+      data.transactions.length;
+
+
+    const list =
+      document.getElementById("activityList");
+
+    if (data.transactions.length === 0) {
+
+      list.innerHTML =
+        '<p style="color:#666;font-size:13px;">No transactions yet.</p>';
+
+      return;
+    }
+
+
+    list.innerHTML =
+      data.transactions
+        .slice()
+        .reverse()
+        .slice(0, 10)
+        .map(t => {
+
+          const positive = t.amount > 0;
+
+          return `
+            <div class="activity-item">
+
+              <div>
+                <div class="activity-main">
+
+                  <span class="${positive ? "increase" : "decrease"}">
+                    ${positive ? "+" : ""}${t.amount} AB
+                  </span>
+
+                  → Balance: ${t.balanceAfter} AB
+
+                </div>
+
+                <div class="activity-reason">
+                  ${escapeHTML(t.reason || "No reason provided")}
+                  ${t.game ? " • " + escapeHTML(t.game) : ""}
+                </div>
+              </div>
+
+              <div class="activity-time">
+                ${escapeHTML(t.time)}
+              </div>
+
+            </div>
+          `;
+
+        })
+        .join("");
+  }
+
+
+  function changeBucks(direction) {
+
+    const amountInput =
+      document.getElementById("amount");
+
+    const reasonInput =
+      document.getElementById("reason");
+
+    const gameInput =
+      document.getElementById("game");
+
+    const amount =
+      Number(amountInput.value);
+
+
+    if (!amount || amount <= 0) {
+      showToast("Enter an amount first.");
+      return;
+    }
+
+
+    const change =
+      Math.floor(amount) * direction;
+
+
+    if (data.balance + change < 0) {
+      showToast("Balance cannot go below 0 AB.");
+      return;
+    }
+
+
+    data.balance += change;
+
+
+    data.transactions.push({
+
+      amount: change,
+
+      balanceAfter: data.balance,
+
+      reason: reasonInput.value.trim(),
+
+      game: gameInput.value,
+
+      time: new Date().toLocaleString()
+
+    });
+
+
+    save();
+    updateUI();
+
+
+    showToast(
+      `${change > 0 ? "+" : ""}${change} AB Bucks applied.`
+    );
+
+
+    amountInput.value = "";
+    reasonInput.value = "";
+    gameInput.value = "";
+
+  }
+
+
+  function quickChange(amount) {
+
+    if (data.balance + amount < 0) {
+      showToast("Balance cannot go below 0 AB.");
+      return;
+    }
+
+
+    data.balance += amount;
+
+
+    data.transactions.push({
+
+      amount: amount,
+
+      balanceAfter: data.balance,
+
+      reason: "Quick action",
+
+      game: "",
+
+      time: new Date().toLocaleString()
+
+    });
+
+
+    save();
+    updateUI();
+
+
+    showToast(
+      `${amount > 0 ? "+" : ""}${amount} AB Bucks applied.`
+    );
+
+  }
+
+
+  function showToast(message) {
+
+    const toast =
+      document.getElementById("toast");
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 2500);
+
+  }
+
+
+  function escapeHTML(value) {
+
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+
+  }
+
+
+  function logout() {
+
+    sessionStorage.removeItem("keyflame_user");
+
+    window.location.href = "login.html";
+
+  }
+
+
+  updateUI();
+
+</script>
+
+</body>
+</html>
