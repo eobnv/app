@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Settings • Keyflame</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #090809;
+      color: #fff;
+      min-height: 100vh;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+
+    .sidebar {
+      width: 245px;
+      background: rgba(18, 14, 18, 0.96);
+      border-right: 1px solid rgba(255,117,182,0.16);
+      padding: 24px 16px;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: 800;
+      margin-bottom: 35px;
+      padding-left: 10px;
+    }
+
+    .logo span {
+      color: #ff75b6;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .nav a {
+      color: #aaa;
+      text-decoration: none;
+      padding: 13px 14px;
+      border-radius: 12px;
+      transition: 0.2s;
+      font-size: 14px;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+      color: #fff;
+      background: rgba(255,117,182,0.11);
+    }
+
+    .nav a.active {
+      border: 1px solid rgba(255,117,182,0.2);
+    }
+
+    .logout {
+      position: absolute;
+      bottom: 24px;
+      left: 16px;
+      right: 16px;
+    }
+
+    .logout button {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      color: #aaa;
+      padding: 12px;
+      border-radius: 11px;
+      cursor: pointer;
+    }
+
+    .logout button:hover {
+      color: #fff;
+      border-color: rgba(255,117,182,0.3);
+    }
+
+    /* MAIN */
+
+    .main {
+      margin-left: 245px;
+      width: calc(100% - 245px);
+      padding: 42px;
+      max-width: 1200px;
+    }
+
+    .top {
+      margin-bottom: 30px;
+    }
+
+    .top h1 {
+      font-size: 32px;
+      margin-bottom: 7px;
+    }
+
+    .top p {
+      color: #999;
+      font-size: 14px;
+    }
+
+    /* SETTINGS SECTIONS */
+
+    .section {
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .section-header {
+      padding: 22px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .section-header h2 {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    .section-header p {
+      color: #888;
+      font-size: 13px;
+    }
+
+    .section-body {
+      padding: 24px;
+    }
+
+    /* SETTING ROW */
+
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 17px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.055);
+    }
+
+    .setting-row:first-child {
+      padding-top: 0;
+    }
+
+    .setting-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .setting-info {
+      flex: 1;
+    }
+
+    .setting-info h3 {
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .setting-info p {
+      color: #888;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    /* BUTTONS */
+
+    button {
+      font-family: inherit;
+    }
+
+    .primary,
+    .secondary,
+    .danger {
+      border-radius: 11px;
+      padding: 11px 16px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: 0.2s;
+      white-space: nowrap;
+    }
+
+    .primary {
+      border: none;
+      background: #ff75b6;
+      color: #190d14;
+    }
+
+    .primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255,117,182,0.18);
+    }
+
+    .secondary {
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      color: #fff;
+    }
+
+    .secondary:hover {
+      background: rgba(255,117,182,0.08);
+      border-color: rgba(255,117,182,0.25);
+    }
+
+    .danger {
+      border: 1px solid rgba(255,80,110,0.25);
+      background: rgba(255,80,110,0.07);
+      color: #ff9aaa;
+    }
+
+    .danger:hover {
+      background: rgba(255,80,110,0.13);
+    }
+
+    /* TOGGLE */
+
+    .toggle {
+      width: 48px;
+      height: 27px;
+      border-radius: 20px;
+      border: none;
+      background: #333;
+      position: relative;
+      cursor: pointer;
+      transition: 0.2s;
+      flex-shrink: 0;
+    }
+
+    .toggle::after {
+      content: "";
+      width: 21px;
+      height: 21px;
+      border-radius: 50%;
+      background: #fff;
+      position: absolute;
+      left: 3px;
+      top: 3px;
+      transition: 0.2s;
+    }
+
+    .toggle.active {
+      background: #ff75b6;
+    }
+
+    .toggle.active::after {
+      left: 24px;
+    }
+
+    /* MODAL */
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 470px;
+      background: #151015;
+      border: 1px solid rgba(255,117,182,0.2);
+      border-radius: 22px;
+      padding: 26px;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.5);
+    }
+
+    .modal-box h2 {
+      margin-bottom: 6px;
+    }
+
+    .modal-box > p {
+      color: #888;
+      font-size: 13px;
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+
+    .field {
+      margin-bottom: 17px;
+    }
+
+    .field label {
+      display: block;
+      color: #bbb;
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: 11px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.045);
+      color: #fff;
+      outline: none;
+    }
+
+    .field input:focus {
+      border-color: #ff75b6;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    /* SELECT */
+
+    select {
+      background: #151015;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 10px 13px;
+      cursor: pointer;
+      outline: none;
+    }
+
+    select:focus {
+      border-color: #ff75b6;
+    }
+
+    /* TOAST */
+
+    .toast {
+      position: fixed;
+      right: 25px;
+      bottom: 25px;
+      background: #171117;
+      border: 1px solid rgba(255,117,182,0.25);
+      color: #fff;
+      padding: 13px 17px;
+      border-radius: 12px;
+      opacity: 0;
+      transform: translateY(15px);
+      pointer-events: none;
+      transition: 0.25s;
+      z-index: 200;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 650px) {
+
+      .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid rgba(255,117,182,0.16);
+      }
+
+      .app {
+        display: block;
+      }
+
+      .logout {
+        position: static;
+        margin-top: 20px;
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 22px;
+      }
+
+      .setting-row {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+
+    <div class="logo">
+      Key<span>flame</span>
+    </div>
+
+    <nav class="nav">
+
+      <a href="dashboard.html">
+        Dashboard
+      </a>
+
+      <a href="games.html">
+        Games
+      </a>
+
+      <a href="bucks.html">
+        AB Bucks
+      </a>
+
+      <a href="history.html">
+        History
+      </a>
+
+      <a href="analytics.html">
+        Analytics
+      </a>
+
+      <a href="profile.html">
+        Profile
+      </a>
+
+      <a href="settings.html" class="active">
+        Settings
+      </a>
+
+    </nav>
+
+    <div class="logout">
+      <button onclick="logout()">
+        Log Out
+      </button>
+    </div>
+
+  </aside>
+
+
+  <main class="main">
+
+    <div class="top">
+
+      <h1>
+        Settings
+      </h1>
+
+      <p>
+        Customize your Keyflame account.
+      </p>
+
+    </div>
+
+
+    <!-- ACCOUNT -->
+
+    <section class="section">
+
+      <div class="section-header">
+
+        <h2>
+          Account
+        </h2>
+
+        <p>
+          Manage your account information.
+        </p>
+
+      </div>
+
+
+      <div class="section-body">
+
+        <div class="setting-row">
+
+          <div class="setting-info">
+
+            <h3>
+              Profile
+            </h3>
+
+            <p>
+              Change your name, username, and profile picture.
+            </p>
+
+          </div>
+
+          <button
+            class="primary"
+            onclick="location.href='profile.html'"
+          >
+            Edit Profile
+          </button>
+
+        </div>
+
+
+        <div class="setting-row">
+
+          <div class="setting-info">
+
+            <h3>
+              Password
+            </h3>
+
+            <p>
+              Change the password used to sign into Keyflame.
+            </p>
+
+          </div>
+
+          <button
+            class="secondary"
+            onclick="openPasswordModal()"
+          >
+            Change Password
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- APPEARANCE -->
+
+    <section class="section">
+
+      <div class="section-header">
+
+        <h2>
+          Appearance
+        </h2>
+
+        <p>
+          Change how Keyflame looks and feels.
+        </p>
+
+      </div>
+
+
+      <div class="section-body">
+
+        <div class="setting-row">
+
+          <div class="setting-info">
+
+            <h3>
+              Pink Glow
+            </h3>
+
+            <p>
+              Enable the pink glow effects throughout the interface.
+            </p>
+
+          </div>
+
+          <button
+            id="glowToggle"
+            class="toggle active"
+            onclick="toggleGlow()"
+          ></button>
+
+        </div>
+
+
+        <div class="setting-row">
+
+          <div class="setting-info">
+
+            <h3>
+              Animations
+            </h3>
+
+            <p>
+              Enable smooth interface animations and transitions.
+            </p>
+
+          </div>
+
+          <button
+            id="animationToggle"
+            class="toggle active"
+            onclick="toggleAnimations()"
+          ></button>
+
+        </div>
+
+
+        <div class="setting-row">
+
+          <div class="setting-info">
+
+            <h3>
+              Accent Style
+            </h3>
+
+            <p>
+              Choose the main accent color.
+            </p>
+
+          </div>
+
+          <select
+            id="accentSelect"
+            onchange="changeAccent()"
+          >
+
+            <option value="pink">
+              Sakura Pink
+            </option>
+
+            <option value="purple">
+              Purple
+            </option>
+
+            <option value="blue">
+              Blue
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- NOTIFICATIONS -->
+
+    <section class="section">
+
+      <div class="section-header">
+
+        <h2>
+          Notifications
+        </h2>
+
+        <p>
+          Control Keyflame notifications.
+        </p>
+
+      </div>
+
+
+      <div class="section-body">
+
+        <div class="setting-row">
+
+          <div class="setting-info">
+
+            <h3>
+              Activity Notifications
+            </h3>
+
+            <p>
+              Show notifications when AB Bucks or games are updated.
+            </p>
+
+          </div>
+
+          <button
+            id="notificationToggle"
+            class="toggle active"
+            onclick="toggleNotifications()"
+          ></button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- SECURITY -->
+
+    <section class="section">
+
+      <div class="section-header">
+
+        <h2>
+          Security
+        </h2>
+
+        <p>
+          Account security controls.
+        </p>
+
+      </div>
+
+
+      <div class="section-body">
+
+        <div class="setting-row">
+
+          <div class="setting-info">
+
+            <h3>
+              Sign Out
+            </h3>
+
+            <p>
+              Sign out of this Keyflame session.
+            </p>
+
+          </div>
+
+          <button
+            class="secondary"
+            onclick="logout()"
+          >
+            Sign Out
+          </button>
+
+        </div>
+
+
+        <div class="setting-row">
+
+          <div class="setting-info">
+
+            <h3>
+              Reset Local Settings
+            </h3>
+
+            <p>
+              Reset appearance and notification preferences on this browser.
+            </p>
+
+          </div>
+
+          <button
+            class="danger"
+            onclick="resetSettings()"
+          >
+            Reset
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<!-- PASSWORD MODAL -->
+
+<div
+  class="modal"
+  id="passwordModal"
+>
+
+  <div class="modal-box">
+
+    <h2>
+      Change Password
+    </h2>
+
+    <p>
+      This demo stores the password locally. When we add the real backend, passwords will be securely hashed on the server instead.
+    </p>
+
+
+    <div class="field">
+
+      <label>
+        Current Password
+      </label>
+
+      <input
+        type="password"
+        id="currentPassword"
+        placeholder="Current password"
+      >
+
+    </div>
+
+
+    <div class="field">
+
+      <label>
+        New Password
+      </label>
+
+      <input
+        type="password"
+        id="newPassword"
+        placeholder="New password"
+      >
+
+    </div>
+
+
+    <div class="field">
+
+      <label>
+        Confirm New Password
+      </label>
+
+      <input
+        type="password"
+        id="confirmPassword"
+        placeholder="Confirm new password"
+      >
+
+    </div>
+
+
+    <div class="modal-actions">
+
+      <button
+        class="secondary"
+        onclick="closePasswordModal()"
+      >
+        Cancel
+      </button>
+
+      <button
+        class="primary"
+        onclick="changePassword()"
+      >
+        Save Password
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<div
+  class="toast"
+  id="toast"
+></div>
+
+
+<script>
+
+  const SETTINGS_KEY =
+    "keyflame_settings";
+
+  const PASSWORD_KEY =
+    "keyflame_password";
+
+
+  const DEFAULT_SETTINGS = {
+
+    glow: true,
+
+    animations: true,
+
+    notifications: true,
+
+    accent: "pink"
+
+  };
+
+
+  function getSettings() {
+
+    try {
+
+      const saved =
+        localStorage.getItem(
+          SETTINGS_KEY
+        );
+
+      if (!saved) {
+
+        return {
+          ...DEFAULT_SETTINGS
+        };
+
+      }
+
+      return {
+        ...DEFAULT_SETTINGS,
+        ...JSON.parse(saved)
+      };
+
+    } catch {
+
+      return {
+        ...DEFAULT_SETTINGS
+      };
+
+    }
+
+  }
+
+
+  function saveSettings(settings) {
+
+    localStorage.setItem(
+      SETTINGS_KEY,
+      JSON.stringify(settings)
+    );
+
+  }
+
+
+  function applySettings() {
+
+    const settings =
+      getSettings();
+
+
+    const glowToggle =
+      document.getElementById(
+        "glowToggle"
+      );
+
+    const animationToggle =
+      document.getElementById(
+        "animationToggle"
+      );
+
+    const notificationToggle =
+      document.getElementById(
+        "notificationToggle"
+      );
+
+
+    glowToggle.classList.toggle(
+      "active",
+      settings.glow
+    );
+
+
+    animationToggle.classList.toggle(
+      "active",
+      settings.animations
+    );
+
+
+    notificationToggle.classList.toggle(
+      "active",
+      settings.notifications
+    );
+
+
+    document.getElementById(
+      "accentSelect"
+    ).value =
+      settings.accent;
+
+
+    if (!settings.animations) {
+
+      document.body.style.transition =
+        "none";
+
+      document.querySelectorAll("*")
+        .forEach(element => {
+          element.style.transition =
+            "none";
+        });
+
+    }
+
+
+    if (!settings.glow) {
+
+      document.body.classList.add(
+        "no-glow"
+      );
+
+    } else {
+
+      document.body.classList.remove(
+        "no-glow"
+      );
+
+    }
+
+  }
+
+
+  function toggleGlow() {
+
+    const settings =
+      getSettings();
+
+    settings.glow =
+      !settings.glow;
+
+    saveSettings(settings);
+
+    applySettings();
+
+    showToast(
+      settings.glow
+        ? "Pink glow enabled."
+        : "Pink glow disabled."
+    );
+
+  }
+
+
+  function toggleAnimations() {
+
+    const settings =
+      getSettings();
+
+    settings.animations =
+      !settings.animations;
+
+    saveSettings(settings);
+
+    applySettings();
+
+    showToast(
+      settings.animations
+        ? "Animations enabled."
+        : "Animations disabled."
+    );
+
+  }
+
+
+  function toggleNotifications() {
+
+    const settings =
+      getSettings();
+
+    settings.notifications =
+      !settings.notifications;
+
+    saveSettings(settings);
+
+    applySettings();
+
+    showToast(
+      settings.notifications
+        ? "Notifications enabled."
+        : "Notifications disabled."
+    );
+
+  }
+
+
+  function changeAccent() {
+
+    const settings =
+      getSettings();
+
+    settings.accent =
+      document.getElementById(
+        "accentSelect"
+      ).value;
+
+    saveSettings(settings);
+
+    applyAccent(
+      settings.accent
+    );
+
+    showToast(
+      "Accent updated."
+    );
+
+  }
+
+
+  function applyAccent(accent) {
+
+    let color =
+      "#ff75b6";
+
+
+    if (accent === "purple") {
+      color = "#b77aff";
+    }
+
+
+    if (accent === "blue") {
+      color = "#72b7ff";
+    }
+
+
+    document.documentElement
+      .style.setProperty(
+        "--accent",
+        color
+      );
+
+  }
+
+
+  function openPasswordModal() {
+
+    document.getElementById(
+      "passwordModal"
+    ).classList.add(
+      "show"
+    );
+
+  }
+
+
+  function closePasswordModal() {
+
+    document.getElementById(
+      "passwordModal"
+    ).classList.remove(
+      "show"
+    );
+
+
+    document.getElementById(
+      "currentPassword"
+    ).value = "";
+
+
+    document.getElementById(
+      "newPassword"
+    ).value = "";
+
+
+    document.getElementById(
+      "confirmPassword"
+    ).value = "";
+
+  }
+
+
+  function changePassword() {
+
+    const current =
+      document.getElementById(
+        "currentPassword"
+      ).value;
+
+
+    const newPassword =
+      document.getElementById(
+        "newPassword"
+      ).value;
+
+
+    const confirm =
+      document.getElementById(
+        "confirmPassword"
+      ).value;
+
+
+    const savedPassword =
+      localStorage.getItem(
+        PASSWORD_KEY
+      ) || "1234";
+
+
+    if (current !== savedPassword) {
+
+      showToast(
+        "Current password is incorrect."
+      );
+
+      return;
+
+    }
+
+
+    if (newPassword.length < 4) {
+
+      showToast(
+        "New password must be at least 4 characters."
+      );
+
+      return;
+
+    }
+
+
+    if (newPassword !== confirm) {
+
+      showToast(
+        "Passwords do not match."
+      );
+
+      return;
+
+    }
+
+
+    localStorage.setItem(
+      PASSWORD_KEY,
+      newPassword
+    );
+
+
+    closePasswordModal();
+
+
+    showToast(
+      "Password changed!"
+    );
+
+  }
+
+
+  function resetSettings() {
+
+    const confirmed =
+      confirm(
+        "Reset your local Keyflame settings?"
+      );
+
+
+    if (!confirmed) return;
+
+
+    localStorage.removeItem(
+      SETTINGS_KEY
+    );
+
+
+    applySettings();
+
+
+    showToast(
+      "Settings reset."
+    );
+
+  }
+
+
+  function logout() {
+
+    sessionStorage.removeItem(
+      "keyflame_user"
+    );
+
+    location.href =
+      "login.html";
+
+  }
+
+
+  function showToast(message) {
+
+    const toast =
+      document.getElementById(
+        "toast"
+      );
+
+
+    toast.textContent =
+      message;
+
+
+    toast.classList.add(
+      "show"
+    );
+
+
+    setTimeout(() => {
+
+      toast.classList.remove(
+        "show"
+      );
+
+    }, 2500);
+
+  }
+
+
+  document.getElementById(
+    "passwordModal"
+  ).addEventListener(
+    "click",
+    function(event) {
+
+      if (
+        event.target === this
+      ) {
+
+        closePasswordModal();
+
+      }
+
+    }
+  );
+
+
+  const style =
+    document.createElement(
+      "style"
+    );
+
+
+  style.textContent = `
+
+    :root {
+      --accent: #ff75b6;
+    }
+
+    .primary {
+      background: var(--accent) !important;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+      background: color-mix(
+        in srgb,
+        var(--accent) 11%,
+        transparent
+      );
+    }
+
+    .no-glow .avatar,
+    .no-glow * {
+      box-shadow: none !important;
+    }
+
+  `;
+
+
+  document.head.appendChild(
+    style
+  );
+
+
+  const settings =
+    getSettings();
+
+
+  applyAccent(
+    settings.accent
+  );
+
+
+  applySettings();
+
+</script>
+
+</body>
+</html>
