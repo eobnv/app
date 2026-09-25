@@ -29,8 +29,6 @@
       display: flex;
     }
 
-    /* SIDEBAR */
-
     .sidebar {
       width: 250px;
       background: #0f0d10;
@@ -108,8 +106,6 @@
       border-color: #ff4fa3;
     }
 
-    /* MAIN */
-
     .main {
       margin-left: 250px;
       width: calc(100% - 250px);
@@ -145,8 +141,6 @@
     .profile-button:hover {
       border-color: #ff4fa3;
     }
-
-    /* BALANCE */
 
     .balance-card {
       position: relative;
@@ -194,8 +188,6 @@
       margin-top: 10px;
     }
 
-    /* STATS */
-
     .stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -229,8 +221,6 @@
       color: #ff6f8f;
     }
 
-    /* LOWER GRID */
-
     .content-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -247,8 +237,6 @@
       font-size: 13px;
       margin-bottom: 20px;
     }
-
-    /* TRANSACTIONS */
 
     .transaction {
       display: flex;
@@ -282,8 +270,6 @@
       color: #666;
       font-size: 13px;
     }
-
-    /* GAMES PREVIEW */
 
     .game-card {
       background: #0b0a0c;
@@ -333,8 +319,6 @@
     .games-button:hover {
       border-color: #ff4fa3;
     }
-
-    /* RESPONSIVE */
 
     @media (max-width: 950px) {
       .sidebar {
@@ -395,8 +379,6 @@
 
 <div class="layout">
 
-  <!-- SIDEBAR -->
-
   <aside class="sidebar">
 
     <div class="logo">
@@ -415,7 +397,7 @@
         Games
       </button>
 
-      <button onclick="showComingSoon('AB Bucks')">
+      <button onclick="goBucks()">
         AB Bucks
       </button>
 
@@ -441,9 +423,6 @@
 
   </aside>
 
-
-  <!-- MAIN -->
-
   <main class="main">
 
     <div class="topbar">
@@ -462,9 +441,6 @@
 
     </div>
 
-
-    <!-- BALANCE -->
-
     <section class="balance-card">
 
       <div class="balance-label">
@@ -481,67 +457,26 @@
 
     </section>
 
-
-    <!-- STATS -->
-
     <section class="stats">
 
       <div class="card">
-
-        <div class="stat-label">
-          Total Earned
-        </div>
-
-        <div
-          class="stat-value green"
-          id="earned"
-        >
-          0 AB
-        </div>
-
+        <div class="stat-label">Total Earned</div>
+        <div class="stat-value green" id="earned">0 AB</div>
       </div>
 
-
       <div class="card">
-
-        <div class="stat-label">
-          Total Lost
-        </div>
-
-        <div
-          class="stat-value red"
-          id="lost"
-        >
-          0 AB
-        </div>
-
+        <div class="stat-label">Total Lost</div>
+        <div class="stat-value red" id="lost">0 AB</div>
       </div>
 
-
       <div class="card">
-
-        <div class="stat-label">
-          Transactions
-        </div>
-
-        <div
-          class="stat-value"
-          id="transactions"
-        >
-          0
-        </div>
-
+        <div class="stat-label">Transactions</div>
+        <div class="stat-value" id="transactions">0</div>
       </div>
 
     </section>
 
-
-    <!-- LOWER CONTENT -->
-
     <section class="content-grid">
-
-
-      <!-- HISTORY -->
 
       <div class="card">
 
@@ -561,9 +496,6 @@
 
       </div>
 
-
-      <!-- GAMES -->
-
       <div class="card">
 
         <h2>Your Games</h2>
@@ -571,7 +503,6 @@
         <p class="sub">
           Games you play on the AB Server.
         </p>
-
 
         <div class="game-card">
 
@@ -596,7 +527,6 @@
 
         </div>
 
-
         <button
           class="games-button"
           onclick="goGames()"
@@ -612,214 +542,166 @@
 
 </div>
 
-
 <script>
 
-  /*
-    DEMO DATA
+const STORAGE_KEY = "keyflame_admin_data";
 
-    This currently reads the same browser storage
-    used by admin.html.
+function loadData() {
 
-    Later, this will be replaced with the real
-    Keyflame backend/database.
-  */
+  const saved = localStorage.getItem(STORAGE_KEY);
 
-  const STORAGE_KEY = "keyflame_admin_data";
-
-
-  function loadData() {
-
-    const saved =
-      localStorage.getItem(STORAGE_KEY);
-
-    if (!saved) {
-
-      return {
-        balance: 0,
-        transactions: []
-      };
-
-    }
-
-    try {
-
-      return JSON.parse(saved);
-
-    } catch {
-
-      return {
-        balance: 0,
-        transactions: []
-      };
-
-    }
-
+  if (!saved) {
+    return {
+      balance: 0,
+      transactions: []
+    };
   }
 
+  try {
+    return JSON.parse(saved);
+  } catch {
+    return {
+      balance: 0,
+      transactions: []
+    };
+  }
 
-  function updateDashboard() {
+}
 
-    const data = loadData();
+function updateDashboard() {
 
+  const data = loadData();
 
-    document.getElementById("balance")
-      .textContent =
-      data.balance + " AB";
+  document.getElementById("balance").textContent =
+    data.balance + " AB";
 
+  const earned =
+    data.transactions
+      .filter(t => t.amount > 0)
+      .reduce((sum, t) => sum + t.amount, 0);
 
-    const earned =
-      data.transactions
-        .filter(t => t.amount > 0)
-        .reduce(
-          (sum, t) => sum + t.amount,
-          0
-        );
+  const lost =
+    data.transactions
+      .filter(t => t.amount < 0)
+      .reduce((sum, t) => sum + Math.abs(t.amount), 0);
 
+  document.getElementById("earned").textContent =
+    earned + " AB";
 
-    const lost =
-      data.transactions
-        .filter(t => t.amount < 0)
-        .reduce(
-          (sum, t) => sum + Math.abs(t.amount),
-          0
-        );
+  document.getElementById("lost").textContent =
+    lost + " AB";
 
+  document.getElementById("transactions").textContent =
+    data.transactions.length;
 
-    document.getElementById("earned")
-      .textContent =
-      earned + " AB";
+  const history =
+    document.getElementById("history");
 
-
-    document.getElementById("lost")
-      .textContent =
-      lost + " AB";
-
-
-    document.getElementById("transactions")
-      .textContent =
-      data.transactions.length;
-
-
-    const history =
-      document.getElementById("history");
-
-
-    if (data.transactions.length === 0) {
-
-      history.innerHTML =
-        '<div class="empty">No AB Bucks activity yet.</div>';
-
-      return;
-
-    }
-
+  if (data.transactions.length === 0) {
 
     history.innerHTML =
-      data.transactions
-        .slice()
-        .reverse()
-        .slice(0, 5)
-        .map(t => {
+      '<div class="empty">No AB Bucks activity yet.</div>';
 
-          const positive =
-            t.amount > 0;
+    return;
+  }
 
-          return `
+  history.innerHTML =
+    data.transactions
+      .slice()
+      .reverse()
+      .slice(0, 5)
+      .map(t => {
 
-            <div class="transaction">
+        const positive = t.amount > 0;
 
-              <div>
+        return `
+          <div class="transaction">
 
-                <div class="transaction-name">
-                  ${escapeHTML(
-                    t.reason || "AB Bucks change"
-                  )}
-                </div>
+            <div>
 
-                <div class="transaction-time">
-                  ${escapeHTML(t.time || "")}
-                </div>
-
+              <div class="transaction-name">
+                ${escapeHTML(
+                  t.reason || "AB Bucks change"
+                )}
               </div>
 
-              <div
-                class="transaction-amount
-                ${positive ? "green" : "red"}"
-              >
-                ${positive ? "+" : ""}
-                ${t.amount} AB
+              <div class="transaction-time">
+                ${escapeHTML(t.time || "")}
               </div>
 
             </div>
 
-          `;
+            <div
+              class="transaction-amount
+              ${positive ? "green" : "red"}"
+            >
+              ${positive ? "+" : ""}
+              ${t.amount} AB
+            </div>
 
-        })
-        .join("");
+          </div>
+        `;
 
-  }
+      })
+      .join("");
 
+}
 
-  function escapeHTML(value) {
+function escapeHTML(value) {
 
-    return String(value)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 
-  }
+}
 
+function goDashboard() {
 
-  function goDashboard() {
+  window.location.href = "dashboard.html";
 
-    window.location.href =
-      "dashboard.html";
+}
 
-  }
+function goGames() {
 
+  window.location.href = "games.html";
 
-  function goGames() {
+}
 
-    window.location.href =
-      "games.html";
+function goBucks() {
 
-  }
+  window.location.href = "bucks.html";
 
+}
 
-  function openGame(name) {
+function openGame(name) {
 
-    window.location.href =
-      "games.html";
+  window.location.href = "games.html";
 
-  }
+}
 
+function showComingSoon(section) {
 
-  function showComingSoon(section) {
+  alert(
+    section +
+    " will be connected when we build that section."
+  );
 
-    alert(
-      section +
-      " will be connected when we build that section."
-    );
+}
 
-  }
+function logout() {
 
+  sessionStorage.removeItem("keyflame_user");
 
-  function logout() {
+  window.location.href = "login.html";
 
-    sessionStorage.removeItem(
-      "keyflame_user"
-    );
+}
 
-    window.location.href =
-      "login.html";
+updateDashboard();
 
-  }
-
-
-  updateDashboard();
+window.addEventListener("storage", updateDashboard);
 
 </script>
 
