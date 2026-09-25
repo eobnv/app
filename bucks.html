@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AB Bucks — Keyflame</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(255, 105, 180, 0.12), transparent 30%),
+        radial-gradient(circle at 80% 80%, rgba(255, 105, 180, 0.08), transparent 30%),
+        #090809;
+    color: white;
+    min-height: 100vh;
+}
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 240px;
+    height: 100vh;
+    padding: 28px 18px;
+    background: rgba(15, 13, 15, 0.94);
+    border-right: 1px solid rgba(255, 105, 180, 0.16);
+    backdrop-filter: blur(18px);
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: 800;
+    margin-bottom: 40px;
+    padding-left: 12px;
+}
+
+.logo span {
+    color: #ff69b4;
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.nav a {
+    color: #aaa;
+    text-decoration: none;
+    padding: 13px 14px;
+    border-radius: 12px;
+    transition: 0.25s;
+}
+
+.nav a:hover,
+.nav a.active {
+    color: white;
+    background: rgba(255, 105, 180, 0.12);
+    border: 1px solid rgba(255, 105, 180, 0.2);
+}
+
+.logout {
+    position: absolute;
+    bottom: 25px;
+    left: 18px;
+    right: 18px;
+    color: #aaa;
+    background: none;
+    border: 1px solid #292529;
+    padding: 12px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.logout:hover {
+    color: white;
+    border-color: #ff69b4;
+}
+
+.main {
+    margin-left: 240px;
+    padding: 45px;
+    max-width: 1200px;
+}
+
+.header {
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 36px;
+    margin-bottom: 8px;
+}
+
+.header p {
+    color: #999;
+}
+
+.balance-card {
+    position: relative;
+    overflow: hidden;
+    padding: 35px;
+    border-radius: 24px;
+    background:
+        linear-gradient(135deg,
+        rgba(255, 105, 180, 0.18),
+        rgba(255, 255, 255, 0.035));
+    border: 1px solid rgba(255, 105, 180, 0.28);
+    box-shadow: 0 0 45px rgba(255, 105, 180, 0.08);
+    margin-bottom: 25px;
+}
+
+.balance-card::after {
+    content: "AB";
+    position: absolute;
+    right: 30px;
+    top: 15px;
+    font-size: 120px;
+    font-weight: 900;
+    color: rgba(255,255,255,0.025);
+}
+
+.balance-label {
+    color: #bbb;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.balance {
+    font-size: 55px;
+    font-weight: 800;
+}
+
+.balance span {
+    color: #ff69b4;
+    font-size: 22px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 30px;
+}
+
+.card {
+    background: rgba(255,255,255,0.035);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px;
+    padding: 22px;
+}
+
+.card h3 {
+    color: #999;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.card strong {
+    font-size: 27px;
+}
+
+.section {
+    background: rgba(255,255,255,0.035);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.section-header {
+    padding: 22px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.section-header h2 {
+    font-size: 20px;
+}
+
+.transaction {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 19px 22px;
+    border-bottom: 1px solid rgba(255,255,255,0.055);
+}
+
+.transaction:last-child {
+    border-bottom: none;
+}
+
+.transaction-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.add {
+    background: rgba(70, 220, 140, 0.12);
+    color: #65e69a;
+}
+
+.remove {
+    background: rgba(255, 90, 120, 0.12);
+    color: #ff7088;
+}
+
+.reason {
+    font-weight: 600;
+}
+
+.meta {
+    color: #777;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.amount {
+    font-weight: 700;
+}
+
+.amount.add-text {
+    color: #65e69a;
+}
+
+.amount.remove-text {
+    color: #ff7088;
+}
+
+.empty {
+    padding: 45px;
+    text-align: center;
+    color: #777;
+}
+
+@media (max-width: 800px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid rgba(255,105,180,0.16);
+    }
+
+    .logout {
+        position: static;
+        margin-top: 20px;
+        width: 100%;
+    }
+
+    .main {
+        margin-left: 0;
+        padding: 25px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .balance {
+        font-size: 42px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+    <div class="logo">Key<span>flame</span></div>
+
+    <nav class="nav">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="games.html">Games</a>
+        <a href="bucks.html" class="active">AB Bucks</a>
+        <a href="#" onclick="comingSoon(event)">History</a>
+        <a href="#" onclick="comingSoon(event)">Analytics</a>
+        <a href="#" onclick="comingSoon(event)">Profile</a>
+    </nav>
+
+    <button class="logout" onclick="logout()">Log Out</button>
+</aside>
+
+<main class="main">
+
+    <div class="header">
+        <h1>AB Bucks</h1>
+        <p>Your complete AB Bucks balance and transaction history.</p>
+    </div>
+
+    <section class="balance-card">
+        <div class="balance-label">CURRENT BALANCE</div>
+        <div class="balance" id="balance">$0 <span>AB</span></div>
+    </section>
+
+    <section class="stats">
+
+        <div class="card">
+            <h3>TOTAL EARNED</h3>
+            <strong id="earned">$0</strong>
+        </div>
+
+        <div class="card">
+            <h3>TOTAL LOST</h3>
+            <strong id="lost">$0</strong>
+        </div>
+
+        <div class="card">
+            <h3>TRANSACTIONS</h3>
+            <strong id="transactions">0</strong>
+        </div>
+
+    </section>
+
+    <section class="section">
+
+        <div class="section-header">
+            <h2>Transaction History</h2>
+        </div>
+
+        <div id="history"></div>
+
+    </section>
+
+</main>
+
+<script>
+
+const STORAGE_KEY = "keyflame_admin_data";
+
+function getData() {
+
+    const saved = localStorage.getItem(STORAGE_KEY);
+
+    if (!saved) {
+        return {
+            balance: 0,
+            transactions: []
+        };
+    }
+
+    try {
+        return JSON.parse(saved);
+    } catch {
+        return {
+            balance: 0,
+            transactions: []
+        };
+    }
+}
+
+function formatDate(date) {
+
+    return new Date(date).toLocaleString([], {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit"
+    });
+}
+
+function render() {
+
+    const data = getData();
+
+    const transactions = data.transactions || [];
+
+    let earned = 0;
+    let lost = 0;
+
+    transactions.forEach(transaction => {
+
+        const amount = Number(transaction.amount) || 0;
+
+        if (amount > 0) {
+            earned += amount;
+        } else {
+            lost += Math.abs(amount);
+        }
+
+    });
+
+    document.getElementById("balance").innerHTML =
+        `$${Number(data.balance || 0).toLocaleString()} <span>AB</span>`;
+
+    document.getElementById("earned").textContent =
+        `$${earned.toLocaleString()}`;
+
+    document.getElementById("lost").textContent =
+        `$${lost.toLocaleString()}`;
+
+    document.getElementById("transactions").textContent =
+        transactions.length;
+
+    const history = document.getElementById("history");
+
+    if (!transactions.length) {
+
+        history.innerHTML = `
+            <div class="empty">
+                No AB Bucks transactions yet.
+            </div>
+        `;
+
+        return;
+    }
+
+    history.innerHTML = transactions
+        .slice()
+        .reverse()
+        .map(transaction => {
+
+            const amount = Number(transaction.amount) || 0;
+            const positive = amount >= 0;
+
+            return `
+                <div class="transaction">
+
+                    <div class="transaction-left">
+
+                        <div class="icon ${positive ? "add" : "remove"}">
+                            ${positive ? "+" : "−"}
+                        </div>
+
+                        <div>
+                            <div class="reason">
+                                ${escapeHTML(transaction.reason || "AB Bucks adjustment")}
+                            </div>
+
+                            <div class="meta">
+                                ${transaction.game ? escapeHTML(transaction.game) + " • " : ""}
+                                ${formatDate(transaction.date || transaction.timestamp || Date.now())}
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="amount ${positive ? "add-text" : "remove-text"}">
+                        ${positive ? "+" : "−"}$${Math.abs(amount).toLocaleString()}
+                    </div>
+
+                </div>
+            `;
+
+        })
+        .join("");
+}
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+function logout() {
+
+    sessionStorage.removeItem("keyflame_user");
+    window.location.href = "login.html";
+}
+
+function comingSoon(event) {
+
+    event.preventDefault();
+
+    alert("This section is coming next.");
+}
+
+render();
+
+window.addEventListener("storage", render);
+
+</script>
+
+</body>
+</html>
