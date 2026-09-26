@@ -1,70 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Create Account — Keyflame</title>
-<link rel="icon" type="image/svg+xml" href="keyflame-logo.svg">
-<link rel="stylesheet" href="theme.css">
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{min-height:100vh;font-family:Inter,Arial,sans-serif;background:radial-gradient(circle at 15% 20%,rgba(255,82,183,.14),transparent 32%),radial-gradient(circle at 85% 80%,rgba(255,82,183,.10),transparent 32%),#090809;color:#fff;display:flex;align-items:center;justify-content:center;padding:24px}
-.wrap{width:100%;max-width:440px}.logo{text-align:center;margin-bottom:28px}.logo .kf-logo-mark{display:inline-flex}
-.card{padding:42px;border-radius:26px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.10);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);box-shadow:0 25px 80px rgba(0,0,0,.5)}
-h1{font-size:34px;letter-spacing:-1px;margin-bottom:9px}.sub{color:#929292;font-size:15px;margin-bottom:30px}
-.field{margin-bottom:18px}.field label{display:block;font-size:13px;color:#bcbcbc;margin-bottom:8px}.field input{width:100%;height:52px;padding:0 16px;border-radius:13px;border:1px solid rgba(255,255,255,.10);outline:none;background:rgba(255,255,255,.055);color:#fff;font-size:15px}.field input:focus{border-color:rgba(255,91,189,.75);box-shadow:0 0 0 3px rgba(255,91,189,.10)}
-.error{display:none;margin-bottom:18px;padding:12px 14px;border-radius:11px;background:rgba(255,70,150,.08);border:1px solid rgba(255,70,150,.18);color:#ff86c7;font-size:13px}
-button{width:100%;height:53px;border:0;border-radius:13px;background:linear-gradient(135deg,#ff4fb5,#ff78c7);color:#fff;font-size:15px;font-weight:700;cursor:pointer}button:disabled{opacity:.65;cursor:wait}.back{display:block;margin-top:22px;text-align:center;color:#777;text-decoration:none;font-size:13px}.back:hover{color:#fff}.note{text-align:center;color:#555;font-size:11px;margin-top:18px}
-@media(max-width:500px){.card{padding:30px 24px}h1{font-size:29px}}
-</style>
-</head>
-<body>
-<main class="wrap">
-<div class="logo"><span class="kf-logo-mark">K</span></div>
-<section class="card">
-<h1>Create your account.</h1>
-<p class="sub">Set up your Keyflame AB Server account.</p>
-<form id="signupForm">
-<div class="field"><label for="username">Username</label><input id="username" type="text" autocomplete="username" placeholder="Choose a username" minlength="3" maxlength="30" pattern="[A-Za-z0-9_]+" required></div>
-<div class="field"><label for="name">Display name</label><input id="name" type="text" autocomplete="name" placeholder="Your name" maxlength="60" required></div>
-<div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="new-password" placeholder="At least 6 characters" minlength="6" required></div>
-<div class="field"><label for="confirm">Confirm password</label><input id="confirm" type="password" autocomplete="new-password" placeholder="Enter it again" minlength="6" required></div>
-<div class="error" id="error"></div>
-<button id="signupButton" type="submit">Create Account</button>
-</form>
-<a class="back" href="login.html">← Back to Sign In</a>
-<div class="note">Your account data is kept separate by your Supabase user ID.</div>
-</section>
-</main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-client.js"></script>
-<script>
-const form=document.getElementById("signupForm"),button=document.getElementById("signupButton"),error=document.getElementById("error");
-form.addEventListener("submit",async e=>{
- e.preventDefault(); error.style.display="none";
- const username=document.getElementById("username").value.trim().toLowerCase();
- const displayName=document.getElementById("name").value.trim();
- const password=document.getElementById("password").value;
- const confirm=document.getElementById("confirm").value;
- if(!/^[a-z0-9_]{3,30}$/.test(username)){error.textContent="Use 3–30 letters, numbers, or underscores.";error.style.display="block";return}
- if(username==="admin"){error.textContent="The admin username is reserved.";error.style.display="block";return}
- if(password!==confirm){error.textContent="The passwords do not match.";error.style.display="block";return}
- button.disabled=true;button.textContent="Creating account...";
- try{
-  const exists=await keyflameSupabase.from("profiles").select("id").eq("username",username).maybeSingle();
-  if(exists.data){throw new Error("That username is already taken.")}
-  const email=username+"@keyflame.app";
-  const result=await keyflameSupabase.auth.signUp({email,password,options:{data:{username,display_name:displayName}}});
-  if(result.error) throw result.error;
-  if(!result.data.session){
-   throw new Error("Account created, but email confirmation is enabled in Supabase. Turn off email confirmation for this private server, then sign up again.");
-  }
-  sessionStorage.setItem("keyflame_user",username);
-  const profile=await keyflameSupabase.from("profiles").select("role").eq("id",result.data.user.id).maybeSingle();
-  sessionStorage.setItem("keyflame_role",profile.data?.role || "user");
-  window.location.href=profile.data?.role==="admin"?"admin.html":"dashboard.html";
- }catch(err){error.textContent=err.message||"Could not create the account.";error.style.display="block";button.disabled=false;button.textContent="Create Account"}
-});
-</script>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Create Account — Keyflame</title><link rel="icon" type="image/svg+xml" href="keyflame-logo.svg"><link rel="stylesheet" href="theme.css"></head>
+<body style="min-height:100vh;font-family:Inter,Arial,sans-serif;background:#090809;color:#fff;display:flex;align-items:center;justify-content:center;padding:24px">
+<main style="width:100%;max-width:520px"><section style="padding:42px;border-radius:26px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.1);text-align:center">
+<h1>This page is disabled.</h1><p style="color:#929292;margin:12px 0 26px">Keyflame accounts are managed by the server administrator.</p><a href="login.html" style="display:inline-block;color:#fff;background:linear-gradient(135deg,#ff4fb5,#ff78c7);padding:13px 22px;border-radius:13px;text-decoration:none;font-weight:700">Back to Sign In</a>
+</section></main>
 </body>
 </html>
