@@ -47,5 +47,41 @@ form.addEventListener("submit",async e=>{
  window.location.href=role==="admin"?"admin.html":"dashboard.html";
 });
 </script>
+<script>
+(function(){
+  if(window.__keyflameVisualsLoaded)return;
+  window.__keyflameVisualsLoaded=true;
+  const root=document.documentElement;
+  let raf=0;
+  window.addEventListener("mousemove",function(e){
+    if(raf)return;
+    raf=requestAnimationFrame(function(){
+      raf=0;
+      const x=(e.clientX/window.innerWidth-.5);
+      const y=(e.clientY/window.innerHeight-.5);
+      root.style.setProperty("--kf-mx",x.toFixed(3));
+      root.style.setProperty("--kf-my",y.toFixed(3));
+    });
+  },{passive:true});
+  const selectors=".card,.glass,.section,.panel,.stat-card,.activity,.game-card,.feature,.support-card,.hero,main>section";
+  document.querySelectorAll(selectors).forEach((el,i)=>{
+    if(!el.classList.contains("kf-reveal"))el.classList.add("kf-reveal");
+    el.style.transitionDelay=Math.min(i*35,280)+"ms";
+  });
+  if("IntersectionObserver" in window){
+    const io=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add("kf-visible");
+          io.unobserve(entry.target);
+        }
+      });
+    },{threshold:.08});
+    document.querySelectorAll(".kf-reveal").forEach(el=>io.observe(el));
+  }else{
+    document.querySelectorAll(".kf-reveal").forEach(el=>el.classList.add("kf-visible"));
+  }
+})();
+</script>
 </body>
 </html>
