@@ -290,9 +290,9 @@ body {
         <a href="dashboard.html">Dashboard</a>
         <a href="games.html">Games</a>
         <a href="bucks.html" class="active">AB Bucks</a>
-        <a href="#" onclick="comingSoon(event)">History</a>
-        <a href="#" onclick="comingSoon(event)">Analytics</a>
-        <a href="#" onclick="comingSoon(event)">Profile</a>
+        <a href="history.html">History</a>
+        <a href="analytics.html">Analytics</a>
+        <a href="profile.html">Profile</a>
     </nav>
 
     <button class="logout" onclick="logout()">Log Out</button>
@@ -307,19 +307,19 @@ body {
 
     <section class="balance-card">
         <div class="balance-label">CURRENT BALANCE</div>
-        <div class="balance" id="balance">$0 <span>AB</span></div>
+        <div class="balance" id="balance">¥0 <span>AB</span></div>
     </section>
 
     <section class="stats">
 
         <div class="card">
             <h3>TOTAL EARNED</h3>
-            <strong id="earned">$0</strong>
+            <strong id="earned">¥0</strong>
         </div>
 
         <div class="card">
             <h3>TOTAL LOST</h3>
-            <strong id="lost">$0</strong>
+            <strong id="lost">¥0</strong>
         </div>
 
         <div class="card">
@@ -399,13 +399,13 @@ function render() {
     });
 
     document.getElementById("balance").innerHTML =
-        `$${Number(data.balance || 0).toLocaleString()} <span>AB</span>`;
+        `¥${Number(data.balance || 0).toLocaleString()} <span>AB</span>`;
 
     document.getElementById("earned").textContent =
-        `$${earned.toLocaleString()}`;
+        `¥${earned.toLocaleString()}`;
 
     document.getElementById("lost").textContent =
-        `$${lost.toLocaleString()}`;
+        `¥${lost.toLocaleString()}`;
 
     document.getElementById("transactions").textContent =
         transactions.length;
@@ -454,7 +454,7 @@ function render() {
                     </div>
 
                     <div class="amount ${positive ? "add-text" : "remove-text"}">
-                        ${positive ? "+" : "−"}$${Math.abs(amount).toLocaleString()}
+                        ${positive ? "+" : "−"}¥${Math.abs(amount).toLocaleString()}
                     </div>
 
                 </div>
