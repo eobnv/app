@@ -34,7 +34,7 @@ button {
 /* SIDEBAR */
 
 .sidebar {
-  width: 240px;
+  width: 250px;
   min-height: 100vh;
   background: rgba(18, 15, 18, 0.96);
   border-right: 1px solid rgba(255,255,255,0.08);
@@ -107,8 +107,8 @@ button {
 /* MAIN */
 
 .main {
-  margin-left: 240px;
-  width: calc(100% - 240px);
+  margin-left: 250px;
+  width: calc(100% - 250px);
   padding: 40px;
 }
 
@@ -560,7 +560,8 @@ canvas {
 
 <script>
 
-const STORAGE_KEY = "keyflame_admin_data";
+const CURRENT_USERNAME = (sessionStorage.getItem("keyflame_user") || "kian6203").trim() || "kian6203";
+const STORAGE_KEY = "keyflame_account_" + CURRENT_USERNAME;
 
 let currentRange = 7;
 let chartPoints = [];
