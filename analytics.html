@@ -433,7 +433,7 @@ canvas {
       <button onclick="go('bucks.html')">AB Bucks</button>
       <button onclick="go('history.html')">History</button>
       <button class="active">Analytics</button>
-      <button onclick="comingSoon('Profile')">Profile</button>
+      <button onclick="go('profile.html')">Profile</button>
     </div>
 
     <div class="logout">
@@ -453,7 +453,7 @@ canvas {
 
       <div class="balance">
         <small>Current Balance</small>
-        <strong id="balance">0 AB</strong>
+        <strong id="balance">¥0</strong>
       </div>
 
     </div>
@@ -469,17 +469,17 @@ canvas {
 
       <div class="stat">
         <small>Total Earned</small>
-        <strong class="positive" id="earned">0 AB</strong>
+        <strong class="positive" id="earned">¥0</strong>
       </div>
 
       <div class="stat">
         <small>Total Lost</small>
-        <strong class="negative" id="lost">0 AB</strong>
+        <strong class="negative" id="lost">¥0</strong>
       </div>
 
       <div class="stat">
         <small>Net Change</small>
-        <strong class="pink" id="net">0 AB</strong>
+        <strong class="pink" id="net">¥0</strong>
       </div>
 
       <div class="stat">
@@ -517,22 +517,22 @@ canvas {
 
           <div class="detail">
             <span>Largest Increase</span>
-            <strong class="positive" id="largestIncrease">0 AB</strong>
+            <strong class="positive" id="largestIncrease">¥0</strong>
           </div>
 
           <div class="detail">
             <span>Largest Decrease</span>
-            <strong class="negative" id="largestDecrease">0 AB</strong>
+            <strong class="negative" id="largestDecrease">¥0</strong>
           </div>
 
           <div class="detail">
             <span>Starting Balance</span>
-            <strong id="startingBalance">0 AB</strong>
+            <strong id="startingBalance">¥0</strong>
           </div>
 
           <div class="detail">
             <span>Current Balance</span>
-            <strong class="pink" id="currentBalance">0 AB</strong>
+            <strong class="pink" id="currentBalance">¥0</strong>
           </div>
 
         </div>
@@ -705,31 +705,31 @@ function updateStats() {
   const net = earned - lost;
 
   document.getElementById("balance").textContent =
-    `${data.balance} AB`;
+    `¥${data.balance}`;
 
   document.getElementById("currentBalance").textContent =
     `${data.balance} AB`;
 
   document.getElementById("earned").textContent =
-    `${earned} AB`;
+    `¥${earned}`;
 
   document.getElementById("lost").textContent =
-    `${lost} AB`;
+    `¥${lost}`;
 
   document.getElementById("net").textContent =
-    `${net >= 0 ? "+" : ""}${net} AB`;
+    `${net >= 0 ? "+" : ""}¥${net}`;
 
   document.getElementById("transactions").textContent =
     transactions.length;
 
   document.getElementById("largestIncrease").textContent =
-    `+${largestIncrease} AB`;
+    `+¥${largestIncrease}`;
 
   document.getElementById("largestDecrease").textContent =
-    `-${largestDecrease} AB`;
+    `-¥${largestDecrease}`;
 
   document.getElementById("startingBalance").textContent =
-    `${calculateStartingBalance(transactions)} AB`;
+    `¥${calculateStartingBalance(transactions)}`;
 
 }
 
