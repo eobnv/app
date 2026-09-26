@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Keyflame — Games</title>
-  <link rel="icon" type="image/svg+xml" href="keyflame-oni.png">
+  <link rel="icon" type="image/svg+xml" href="keyflame-logo.svg">
 
   <style>
     * {
@@ -973,677 +973,384 @@ margin-left: 250px;
 ></div>
 
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
 <script>
-
-  const CURRENT_USERNAME = (sessionStorage.getItem("keyflame_user") || "").trim();
-
-  if (!CURRENT_USERNAME) {
-    window.location.href = "login.html";
-  }
-
-  const STORAGE_KEY = "keyflame_games_" + CURRENT_USERNAME;
-
+  let currentUser = null;
   let games = [];
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-    games = Array.isArray(saved) ? saved : [];
-    games.forEach(game => {
-      if (!Array.isArray(game.notes)) game.notes = [];
-    });
-  } catch {
-    games = [];
-  }
-
   let selectedGameId = null;
+  let gamesChannel = null;
 
+  async function initGames() {
+    const auth = await keyflameRequireAuth();
+    if (!auth) return;
+    currentUser = auth.user;
 
-  /* SAVE */
+    const { data, error } = await keyflameSupabase
+      .from("games")
+      .select("*")
+      .eq("user_id", currentUser.id)
+      .order("updated_at", { ascending: false });
 
-  function saveGames() {
-
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(games)
-    );
-
-  }
-
-
-  /* RENDER GAME LIST */
-
-  function renderGames() {
-
-    const grid =
-      document.getElementById("gamesGrid");
-
-
-    if (games.length === 0) {
-
-      grid.innerHTML = `
-
-        <div class="empty-games">
-
-          <strong>No games yet</strong>
-
-          Create your first game with
-          the "+ New Game" button.
-
-        </div>
-
-      `;
-
-      return;
-
+    if (error) {
+      showToast("Could not load your games.");
+      console.error(error);
+      games = [];
+    } else {
+      games = (data || []).map(normalizeGame);
     }
 
+    await migrateLocalGames();
+    renderGames();
 
-    grid.innerHTML =
-      games.map(game => {
-
-        const image = game.image
-          ? `
-            <img
-              class="game-image"
-              src="${game.image}"
-              alt="${escapeHTML(game.title)}"
-            >
-          `
-          : `
-            <div class="game-image-placeholder">
-              🎮
-            </div>
-          `;
-
-
-        return `
-
-          <div class="game-card">
-
-            ${image}
-
-            <div class="game-info">
-
-              <div class="game-title">
-                ${escapeHTML(game.title)}
-              </div>
-
-              <div class="game-description">
-                ${escapeHTML(
-                  game.description ||
-                  "No description yet."
-                )}
-              </div>
-
-              <div class="game-footer">
-
-                <span class="notes-count">
-                  ${game.notes.length}
-                  ${game.notes.length === 1 ? "note" : "notes"}
-                </span>
-
-                <button
-                  class="open-btn"
-                  onclick="openGame('${game.id}')"
-                >
-                  Open
-                </button>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        `;
-
-      }).join("");
-
+    gamesChannel = keyflameSupabase
+      .channel("keyflame-games-" + currentUser.id)
+      .on("postgres_changes", {
+        event: "*",
+        schema: "public",
+        table: "games",
+        filter: "user_id=eq." + currentUser.id
+      }, async () => {
+        const { data: fresh } = await keyflameSupabase
+          .from("games")
+          .select("*")
+          .eq("user_id", currentUser.id)
+          .order("updated_at", { ascending: false });
+        games = (fresh || []).map(normalizeGame);
+        renderGames();
+        if (selectedGameId) openGame(selectedGameId, true);
+      })
+      .subscribe();
   }
 
+  function normalizeGame(game) {
+    return {
+      id: String(game.id),
+      title: game.title || "Untitled Game",
+      description: game.description || "",
+      image: game.image || "",
+      notes: Array.isArray(game.notes) ? game.notes : [],
+      createdAt: game.created_at || new Date().toISOString()
+    };
+  }
 
-  /* NEW GAME */
+  async function migrateLocalGames() {
+    const key = "keyflame_games_" + (sessionStorage.getItem("keyflame_user") || "");
+    let legacy = [];
+    try {
+      const raw = JSON.parse(localStorage.getItem(key) || "[]");
+      legacy = Array.isArray(raw) ? raw : [];
+    } catch {
+      legacy = [];
+    }
+    if (!legacy.length) return;
+
+    const { data: existing } = await keyflameSupabase
+      .from("games")
+      .select("id")
+      .eq("user_id", currentUser.id);
+
+    const existingIds = new Set((existing || []).map(row => String(row.id)));
+    const pending = legacy
+      .filter(game => !existingIds.has(String(game.id)))
+      .map(game => ({
+        id: String(game.id),
+        user_id: currentUser.id,
+        title: game.title || "Untitled Game",
+        description: game.description || "",
+        image: game.image || "",
+        notes: Array.isArray(game.notes) ? game.notes : [],
+        created_at: game.createdAt || new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }));
+
+    if (pending.length) {
+      const { error } = await keyflameSupabase.from("games").insert(pending);
+      if (!error) {
+        localStorage.removeItem(key);
+        const { data: fresh } = await keyflameSupabase
+          .from("games")
+          .select("*")
+          .eq("user_id", currentUser.id)
+          .order("updated_at", { ascending: false });
+        games = (fresh || []).map(normalizeGame);
+      }
+    }
+  }
+
+  async function saveGame(game) {
+    const payload = {
+      id: String(game.id),
+      user_id: currentUser.id,
+      title: game.title,
+      description: game.description || "",
+      image: game.image || "",
+      notes: Array.isArray(game.notes) ? game.notes : [],
+      updated_at: new Date().toISOString()
+    };
+
+    const { data, error } = await keyflameSupabase
+      .from("games")
+      .upsert(payload, { onConflict: "id" })
+      .select()
+      .single();
+
+    if (error) {
+      showToast("Could not save the game.");
+      console.error(error);
+      return false;
+    }
+
+    const saved = normalizeGame(data);
+    games = games.map(item => item.id === saved.id ? saved : item);
+    return true;
+  }
+
+  function renderGames() {
+    const grid = document.getElementById("gamesGrid");
+
+    if (!games.length) {
+      grid.innerHTML = '<div class="empty-games"><strong>No games yet</strong>Create your first game with the "+ New Game" button.</div>';
+      return;
+    }
+
+    grid.innerHTML = games.map(game => {
+      const image = game.image
+        ? '<img class="game-image" src="' + escapeHTML(game.image) + '" alt="' + escapeHTML(game.title) + '">'
+        : '<div class="game-image-placeholder">🎮</div>';
+
+      return '<div class="game-card">' + image +
+        '<div class="game-info"><div class="game-title">' + escapeHTML(game.title) +
+        '</div><div class="game-description">' + escapeHTML(game.description || "No description yet.") +
+        '</div><div class="game-footer"><span class="notes-count">' + game.notes.length +
+        ' ' + (game.notes.length === 1 ? "note" : "notes") +
+        '</span><button class="open-btn" onclick="openGame(\'' + escapeHTML(game.id) + '\')">Open</button></div></div></div>';
+    }).join("");
+  }
 
   function openNewGame() {
-
     document.getElementById("gameTitle").value = "";
     document.getElementById("gameDescription").value = "";
     document.getElementById("gameImage").value = "";
-
-    const preview =
-      document.getElementById("imagePreview");
-
+    const preview = document.getElementById("imagePreview");
     preview.src = "";
     preview.style.display = "none";
-
-    document
-      .getElementById("newGameModal")
-      .classList.add("show");
-
+    document.getElementById("newGameModal").classList.add("show");
   }
 
-
-  function createGame() {
-
-    const title =
-      document.getElementById("gameTitle")
-        .value.trim();
-
-    const description =
-      document.getElementById("gameDescription")
-        .value.trim();
-
-    const image =
-      document.getElementById("imagePreview")
-        .src;
-
+  async function createGame() {
+    const title = document.getElementById("gameTitle").value.trim();
+    const description = document.getElementById("gameDescription").value.trim();
+    const preview = document.getElementById("imagePreview");
 
     if (!title) {
-
       showToast("Give the game a name first.");
-
       return;
-
     }
 
-
     const game = {
-
-      id:
-        Date.now().toString(),
-
+      id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(),
       title,
-
       description,
-
-      image:
-        image &&
-        image !== window.location.href
-          ? image
-          : "",
-
+      image: preview.style.display !== "none" ? preview.src : "",
       notes: [],
-
-      createdAt:
-        new Date().toISOString()
-
+      createdAt: new Date().toISOString()
     };
 
+    const { data, error } = await keyflameSupabase
+      .from("games")
+      .insert({
+        id: game.id,
+        user_id: currentUser.id,
+        title: game.title,
+        description: game.description,
+        image: game.image,
+        notes: game.notes
+      })
+      .select()
+      .single();
 
-    games.push(game);
+    if (error) {
+      showToast("Could not create the game.");
+      console.error(error);
+      return;
+    }
 
-    saveGames();
-
+    games.unshift(normalizeGame(data));
     renderGames();
-
     closeModal("newGameModal");
-
-    showToast("Game created.");
-
+    showToast("Game created and synced.");
   }
 
-
-  /* OPEN GAME */
-
-  function openGame(id) {
-
-    const game =
-      games.find(g => g.id === id);
-
-
+  function openGame(id, silent = false) {
+    const game = games.find(g => g.id === String(id));
     if (!game) return;
 
+    selectedGameId = game.id;
+    document.getElementById("detailTitle").textContent = game.title;
+    document.getElementById("detailDescription").textContent = game.description || "No description yet.";
 
-    selectedGameId = id;
-
-
-    document.getElementById("detailTitle")
-      .textContent = game.title;
-
-
-    document.getElementById("detailDescription")
-      .textContent =
-      game.description ||
-      "No description yet.";
-
-
-    const image =
-      document.getElementById("detailImage");
-
-    const placeholder =
-      document.getElementById("detailPlaceholder");
-
+    const image = document.getElementById("detailImage");
+    const placeholder = document.getElementById("detailPlaceholder");
 
     if (game.image) {
-
       image.src = game.image;
       image.style.display = "block";
       placeholder.style.display = "none";
-
     } else {
-
       image.style.display = "none";
       placeholder.style.display = "grid";
-
     }
-
 
     renderNotes();
 
-
-    document
-      .getElementById("gameDetailModal")
-      .classList.add("show");
-
+    if (!silent) {
+      document.getElementById("gameDetailModal").classList.add("show");
+    }
   }
-
-
-  /* GAME SETTINGS */
 
   function openSettings() {
-
-    const game =
-      games.find(g => g.id === selectedGameId);
-
-
+    const game = games.find(g => g.id === selectedGameId);
     if (!game) return;
 
+    document.getElementById("editTitle").value = game.title;
+    document.getElementById("editDescription").value = game.description || "";
+    document.getElementById("editImage").value = "";
 
-    document.getElementById("editTitle")
-      .value = game.title;
+    const preview = document.getElementById("editImagePreview");
+    preview.src = game.image || "";
+    preview.style.display = game.image ? "block" : "none";
 
-
-    document.getElementById("editDescription")
-      .value = game.description || "";
-
-
-    document.getElementById("editImage")
-      .value = "";
-
-
-    const preview =
-      document.getElementById("editImagePreview");
-
-
-    if (game.image) {
-
-      preview.src = game.image;
-      preview.style.display = "block";
-
-    } else {
-
-      preview.src = "";
-      preview.style.display = "none";
-
-    }
-
-
-    document
-      .getElementById("settingsModal")
-      .classList.add("show");
-
+    document.getElementById("settingsModal").classList.add("show");
   }
 
-
-  function saveGameSettings() {
-
-    const game =
-      games.find(g => g.id === selectedGameId);
-
-
+  async function saveGameSettings() {
+    const game = games.find(g => g.id === selectedGameId);
     if (!game) return;
 
-
-    const title =
-      document.getElementById("editTitle")
-        .value.trim();
-
-
+    const title = document.getElementById("editTitle").value.trim();
     if (!title) {
-
       showToast("Game name cannot be empty.");
-
       return;
-
     }
-
 
     game.title = title;
+    game.description = document.getElementById("editDescription").value.trim();
 
-    game.description =
-      document.getElementById("editDescription")
-        .value.trim();
-
-
-    const preview =
-      document.getElementById("editImagePreview");
-
-
-    if (
-      preview.style.display !== "none" &&
-      preview.src
-    ) {
-
+    const preview = document.getElementById("editImagePreview");
+    if (preview.style.display !== "none" && preview.src) {
       game.image = preview.src;
-
     }
 
-
-    saveGames();
-
-    renderGames();
-
-    closeModal("settingsModal");
-
-    openGame(selectedGameId);
-
-    showToast("Game updated.");
-
+    if (await saveGame(game)) {
+      renderGames();
+      closeModal("settingsModal");
+      openGame(selectedGameId);
+      showToast("Game updated and synced.");
+    }
   }
-
-
-  /* NOTES */
 
   function openNoteModal() {
-
-    document.getElementById("noteText")
-      .value = "";
-
-
-    document
-      .getElementById("noteModal")
-      .classList.add("show");
-
+    document.getElementById("noteText").value = "";
+    document.getElementById("noteModal").classList.add("show");
   }
 
-
-  function saveNote() {
-
-    const game =
-      games.find(g => g.id === selectedGameId);
-
-
+  async function saveNote() {
+    const game = games.find(g => g.id === selectedGameId);
     if (!game) return;
 
-
-    const text =
-      document.getElementById("noteText")
-        .value.trim();
-
-
+    const text = document.getElementById("noteText").value.trim();
     if (!text) {
-
       showToast("Write something in the note first.");
-
       return;
-
     }
-
 
     game.notes.push({
-
       text,
-
-      date:
-        new Date().toLocaleString()
-
+      date: new Date().toLocaleString()
     });
 
-
-    saveGames();
-
-    renderGames();
-
-    renderNotes();
-
-    closeModal("noteModal");
-
-    showToast("Note saved.");
-
+    if (await saveGame(game)) {
+      renderGames();
+      renderNotes();
+      closeModal("noteModal");
+      showToast("Note saved and synced.");
+    }
   }
-
 
   function renderNotes() {
+    const game = games.find(g => g.id === selectedGameId);
+    const list = document.getElementById("notesList");
 
-    const game =
-      games.find(g => g.id === selectedGameId);
-
-
-    const list =
-      document.getElementById("notesList");
-
-
-    if (!game || game.notes.length === 0) {
-
-      list.innerHTML =
-        `<div class="no-notes">
-          No notes yet. Add one to remember what happened.
-        </div>`;
-
+    if (!game || !game.notes.length) {
+      list.innerHTML = '<div class="no-notes">No notes yet. Add one to remember what happened.</div>';
       return;
-
     }
 
-
-    list.innerHTML =
-      game.notes
-        .slice()
-        .reverse()
-        .map(note => `
-
-          <div class="note">
-
-            <div class="note-date">
-              ${escapeHTML(note.date)}
-            </div>
-
-            <div class="note-text">
-              ${escapeHTML(note.text)}
-            </div>
-
-          </div>
-
-        `)
-        .join("");
-
+    list.innerHTML = game.notes.slice().reverse().map(note =>
+      '<div class="note"><div class="note-date">' + escapeHTML(note.date) +
+      '</div><div class="note-text">' + escapeHTML(note.text) + '</div></div>'
+    ).join("");
   }
-
-
-  /* IMAGE PREVIEWS */
 
   function previewImage() {
-
-    const file =
-      document.getElementById("gameImage")
-        .files[0];
-
-
-    const preview =
-      document.getElementById("imagePreview");
-
-
+    const file = document.getElementById("gameImage").files[0];
+    const preview = document.getElementById("imagePreview");
     if (!file) {
-
       preview.style.display = "none";
-
       return;
-
     }
-
-
-    const reader =
-      new FileReader();
-
-
-    reader.onload = function(event) {
-
-      preview.src =
-        event.target.result;
-
-      preview.style.display =
-        "block";
-
+    const reader = new FileReader();
+    reader.onload = event => {
+      preview.src = event.target.result;
+      preview.style.display = "block";
     };
-
-
     reader.readAsDataURL(file);
-
   }
-
 
   function previewEditImage() {
-
-    const file =
-      document.getElementById("editImage")
-        .files[0];
-
-
+    const file = document.getElementById("editImage").files[0];
     if (!file) return;
-
-
-    const reader =
-      new FileReader();
-
-
-    reader.onload = function(event) {
-
-      const preview =
-        document.getElementById("editImagePreview");
-
-      preview.src =
-        event.target.result;
-
-      preview.style.display =
-        "block";
-
+    const reader = new FileReader();
+    reader.onload = event => {
+      const preview = document.getElementById("editImagePreview");
+      preview.src = event.target.result;
+      preview.style.display = "block";
     };
-
-
     reader.readAsDataURL(file);
-
   }
-
-
-  /* MODALS */
 
   function closeModal(id) {
-
-    document
-      .getElementById(id)
-      .classList.remove("show");
-
+    document.getElementById(id).classList.remove("show");
   }
-
-
-  /* NAVIGATION */
-
-  function goDashboard() {
-    window.location.href = "dashboard.html";
-  }
-
-  function goGames() {
-    window.location.href = "games.html";
-  }
-
-  function goBucks() {
-    window.location.href = "bucks.html";
-  }
-
-  function goHistory() {
-    window.location.href = "history.html";
-  }
-
-  function goAnalytics() {
-    window.location.href = "analytics.html";
-  }
-
-  function goProfile() {
-    window.location.href = "profile.html";
-  }
-
-  function goSettings() {
-    window.location.href = "settings.html";
-  }
-
 
   function logout() {
-
-    sessionStorage.removeItem(
-      "keyflame_user"
-    );
-
-    window.location.href =
-      "login.html";
-
+    keyflameSignOut();
   }
-
-
-  /* TOAST */
 
   function showToast(message) {
-
-    const toast =
-      document.getElementById("toast");
-
-
+    const toast = document.getElementById("toast");
     toast.textContent = message;
-
     toast.classList.add("show");
-
-
-    setTimeout(() => {
-
-      toast.classList.remove("show");
-
-    }, 2500);
-
+    setTimeout(() => toast.classList.remove("show"), 2500);
   }
-
-
-  /* SECURITY */
 
   function escapeHTML(value) {
-
     return String(value)
-
       .replaceAll("&", "&amp;")
-
       .replaceAll("<", "&lt;")
-
       .replaceAll(">", "&gt;")
-
       .replaceAll('"', "&quot;")
-
       .replaceAll("'", "&#039;");
-
   }
 
-
-  /* CLOSE MODAL WHEN CLICKING OUTSIDE */
-
-  document
-    .querySelectorAll(".modal-overlay")
-    .forEach(modal => {
-
-      modal.addEventListener(
-        "click",
-        event => {
-
-          if (event.target === modal) {
-
-            modal.classList.remove("show");
-
-          }
-
-        }
-      );
-
+  document.querySelectorAll(".modal-overlay").forEach(modal => {
+    modal.addEventListener("click", event => {
+      if (event.target === modal) modal.classList.remove("show");
     });
+  });
 
-
-  /* START */
-
-  renderGames();
-
+  initGames();
 </script>
 
 </body>
