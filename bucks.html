@@ -344,7 +344,7 @@ margin-left: 250px;
           </div>
         </a>
 
-        <a href="#" class="nav-link logout" id="logoutBtn">
+        <a href="#" class="nav-link logout" id="logoutBtn" onclick="event.preventDefault(); if(typeof logout === 'function'){ logout(); } else { sessionStorage.removeItem('keyflame_user'); window.location.href='login.html'; }">
           <span class="nav-icon">↪</span>
           <span>Logout</span>
         </a>
