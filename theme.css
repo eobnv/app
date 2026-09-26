@@ -1,10 +1,8 @@
-/* Keyflame shared Sakura theme */
+/* Keyflame shared visual system */
 :root{
   --kf-bg:#090809;
   --kf-panel:rgba(20,18,20,.78);
-  --kf-panel-solid:#141214;
   --kf-border:rgba(240,90,169,.18);
-  --kf-border-soft:#252125;
   --kf-pink:#f05aa9;
   --kf-pink-light:#ff9dcc;
   --kf-text:#fff;
@@ -23,8 +21,10 @@ body::before{
   position:fixed;
   z-index:-1;
   pointer-events:none;
-  width:700px;height:900px;
-  right:-80px;bottom:-120px;
+  width:700px;
+  height:900px;
+  right:-80px;
+  bottom:-120px;
   opacity:.55;
   background:url("sakura.svg") center/contain no-repeat;
   filter:drop-shadow(0 0 24px rgba(240,90,169,.08));
@@ -34,8 +34,10 @@ body::after{
   position:fixed;
   z-index:-1;
   pointer-events:none;
-  left:-80px;top:-90px;
-  width:330px;height:330px;
+  left:-80px;
+  top:-90px;
+  width:330px;
+  height:330px;
   border-radius:50%;
   background:rgba(240,90,169,.08);
   filter:blur(90px);
@@ -44,14 +46,7 @@ button{
   transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease,background .2s ease;
 }
 button:hover{transform:translateY(-1px)}
-
-/* Shared shell and surface styling */
-.sidebar{
-  background:rgba(15,13,16,.82)!important;
-  border-color:var(--kf-border)!important;
-  backdrop-filter:blur(22px);
-}
-.card,.glass,.section,.panel,.preview,.login-card,.top-profile,.profile-mini{
+.card,.glass,.section,.panel,.preview,.login-card,.top-profile{
   background:var(--kf-panel)!important;
   border-color:var(--kf-border)!important;
   box-shadow:var(--kf-shadow);
@@ -72,16 +67,8 @@ input:focus,textarea:focus,select:focus{
 .pink:hover,.add:hover,.login-button:hover{
   box-shadow:0 12px 30px rgba(240,90,169,.22);
 }
-.nav-link.active,.nav button.active{
-  background:linear-gradient(90deg,rgba(240,90,169,.16),rgba(240,90,169,.05))!important;
-  border-color:rgba(240,90,169,.16)!important;
-}
-.nav-link:hover,.nav button:hover{
-  background:rgba(240,90,169,.08)!important;
-}
 
-
-/* Dashboard-style taskbar — shared by every logged-in page */
+/* Dashboard-style taskbar shared by all logged-in pages */
 .sidebar{
   width:250px!important;
   min-width:250px!important;
@@ -91,136 +78,10 @@ input:focus,textarea:focus,select:focus{
   padding:24px 16px!important;
   background:rgba(10,8,11,.88)!important;
   border-right:1px solid rgba(255,105,180,.18)!important;
+  backdrop-filter:blur(22px);
   display:flex!important;
   flex-direction:column!important;
 }
-.logo{
-  display:flex!important;
-  align-items:center!important;
-  gap:11px!important;
-  padding:8px 10px 28px!important;
-  margin:0!important;
-  font-size:20px!important;
-  font-weight:800!important;
-  letter-spacing:-.5px!important;
-}
-.logo::before{
-  content:"K";
-  width:38px;
-  height:38px;
-  flex:0 0 38px;
-  display:grid;
-  place-items:center;
-  border-radius:12px;
-  background:linear-gradient(135deg,#ff5ca8,#ff3f96);
-  box-shadow:0 0 25px rgba(255,92,168,.28);
-  font-size:16px;
-  font-weight:900;
-  color:#fff;
-}
-.nav-title{
-  color:#6f6871!important;
-  font-size:10px!important;
-  font-weight:700!important;
-  letter-spacing:1.5px!important;
-  padding:0 12px 10px!important;
-  margin:0!important;
-}
-.nav{
-  display:flex!important;
-  flex-direction:column!important;
-  gap:5px!important;
-}
-.nav button,.nav-link{
-  text-decoration:none!important;
-  width:100%!important;
-  display:flex!important;
-  align-items:center!important;
-  gap:12px!important;
-  min-height:44px!important;
-  padding:12px 13px!important;
-  border-radius:12px!important;
-  border:1px solid transparent!important;
-  background:transparent!important;
-  color:#aaa3ad!important;
-  text-align:left!important;
-  font-size:inherit!important;
-}
-.nav button::before{
-  width:20px;
-  flex:0 0 20px;
-  text-align:center;
-  font-size:15px;
-  opacity:.9;
-}
-.nav button:nth-child(1)::before{content:"⌂";}
-.nav button:nth-child(2)::before{content:"♙";}
-.nav button:nth-child(3)::before{content:"¥";}
-.nav button:nth-child(4)::before{content:"↕";}
-.nav button:nth-child(5)::before{content:"⌁";}
-.nav button:nth-child(6)::before{content:"⚙";}
-.nav button:nth-child(7)::before{content:"◌";}
-.nav button:nth-child(8)::before{content:"●";}
-.nav button:hover,.nav-link:hover{
-  color:#fff!important;
-  background:rgba(255,92,168,.08)!important;
-  border-color:rgba(255,92,168,.10)!important;
-  transform:translateX(2px)!important;
-}
-.nav button.active,.nav-link.active{
-  color:#fff!important;
-  background:linear-gradient(90deg,rgba(255,92,168,.16),rgba(255,92,168,.05))!important;
-  border-color:rgba(255,92,168,.16)!important;
-  box-shadow:none!important;
-}
-.logout{
-  margin-top:auto!important;
-  position:static!important;
-  left:auto!important;
-  right:auto!important;
-  bottom:auto!important;
-}
-.logout button{
-  width:100%!important;
-  min-height:44px!important;
-  padding:12px 13px!important;
-  border-radius:12px!important;
-  border:1px solid transparent!important;
-  background:transparent!important;
-  color:#a59ea7!important;
-  text-align:left!important;
-}
-.logout button::before{
-  content:"↪";
-  display:inline-block;
-  width:20px;
-  margin-right:12px;
-  text-align:center;
-}
-.logout button:hover{
-  color:#ff718f!important;
-  background:rgba(255,113,143,.08)!important;
-  border-color:rgba(255,113,143,.10)!important;
-}
-.main{
-  margin-left:250px!important;
-  width:calc(100% - 250px)!important;
-}
-@media (max-width:650px){
-  .sidebar{
-    width:100%!important;
-    min-width:100%!important;
-    max-width:100%!important;
-    flex:0 0 auto!important;
-  }
-  .main{
-    margin-left:0!important;
-    width:100%!important;
-  }
-  .logo{padding-bottom:20px!important;}
-}
-
-/* Exact dashboard sidebar pieces, shared across every logged-in page */
 .brand{
   display:flex!important;
   align-items:center!important;
@@ -246,6 +107,45 @@ input:focus,textarea:focus,select:focus{
   font-weight:800!important;
   letter-spacing:-.5px!important;
 }
+.nav-title{
+  color:#6f6871!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  letter-spacing:1.5px!important;
+  padding:0 12px 10px!important;
+}
+.nav{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:5px!important;
+}
+.nav-link{
+  text-decoration:none!important;
+  width:100%!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:12px!important;
+  min-height:44px!important;
+  padding:12px 13px!important;
+  border-radius:12px!important;
+  border:1px solid transparent!important;
+  background:transparent!important;
+  color:#aaa3ad!important;
+  text-align:left!important;
+  font-size:inherit!important;
+}
+.nav-link:hover{
+  color:#fff!important;
+  background:rgba(255,92,168,.08)!important;
+  border-color:rgba(255,92,168,.10)!important;
+  transform:translateX(2px)!important;
+}
+.nav-link.active{
+  color:#fff!important;
+  background:linear-gradient(90deg,rgba(255,92,168,.16),rgba(255,92,168,.05))!important;
+  border-color:rgba(255,92,168,.16)!important;
+  box-shadow:none!important;
+}
 .nav-icon{
   width:20px!important;
   flex:0 0 20px!important;
@@ -264,6 +164,10 @@ input:focus,textarea:focus,select:focus{
   color:inherit!important;
   text-decoration:none!important;
 }
+.profile-mini:hover{
+  border-color:rgba(255,92,168,.35)!important;
+  transform:translateY(-1px)!important;
+}
 .avatar{
   width:38px!important;
   height:38px!important;
@@ -275,14 +179,12 @@ input:focus,textarea:focus,select:focus{
   font-weight:800!important;
   overflow:hidden!important;
 }
-.avatar img{width:100%!important;height:100%!important;object-fit:cover!important;}
-.profile-mini-text{min-width:0!important;}
-.profile-mini-name{font-size:13px!important;font-weight:700!important;}
-.profile-mini-user{color:#aaa3ad!important;font-size:11px!important;margin-top:2px!important;overflow:hidden!important;text-overflow:ellipsis!important;}
-.profile-mini:hover{border-color:rgba(255,92,168,.35)!important;transform:translateY(-1px)!important;}
-.logout.nav-link{margin-top:0!important;}
-
-@media (max-width:750px){
+.avatar img{width:100%!important;height:100%!important;object-fit:cover!important}
+.profile-mini-text{min-width:0!important}
+.profile-mini-name{font-size:13px!important;font-weight:700!important}
+.profile-mini-user{color:#aaa3ad!important;font-size:11px!important;margin-top:2px!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.logout.nav-link{margin-top:0!important}
+@media(max-width:750px){
   .sidebar{
     position:fixed!important;
     left:0!important;
@@ -292,6 +194,7 @@ input:focus,textarea:focus,select:focus{
     width:100%!important;
     min-width:100%!important;
     max-width:none!important;
+    flex:0 0 auto!important;
     height:auto!important;
     min-height:0!important;
     padding:10px 12px!important;
@@ -300,11 +203,18 @@ input:focus,textarea:focus,select:focus{
     border-right:none!important;
     border-bottom:1px solid rgba(255,105,180,.18)!important;
   }
-  .brand{padding:0!important;}
-  .brand-name{font-size:17px!important;}
-  .brand-mark{width:34px!important;height:34px!important;flex-basis:34px!important;}
-  .nav-title,.sidebar-bottom,.nav-link span:not(.nav-icon){display:none!important;}
-  .nav{margin-left:auto!important;flex-direction:row!important;gap:3px!important;}
-  .nav-link{width:38px!important;min-width:38px!important;height:38px!important;min-height:38px!important;padding:0!important;justify-content:center!important;}
-  .main{margin-left:0!important;width:100%!important;padding-top:85px!important;}
+  .brand{padding:0!important}
+  .brand-name{font-size:17px!important}
+  .brand-mark{width:34px!important;height:34px!important;flex-basis:34px!important}
+  .nav-title,.sidebar-bottom,.nav-link span:not(.nav-icon){display:none!important}
+  .nav{margin-left:auto!important;flex-direction:row!important;gap:3px!important}
+  .nav-link{width:38px!important;min-width:38px!important;height:38px!important;min-height:38px!important;padding:0!important;justify-content:center!important}
+  .main{margin-left:0!important;width:100%!important;padding-top:85px!important}
+}
+.main{
+  margin-left:250px!important;
+  width:calc(100% - 250px)!important;
+}
+@media(max-width:750px){
+  .main{margin-left:0!important;width:100%!important}
 }
