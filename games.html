@@ -954,11 +954,24 @@ margin-left: 250px;
 
 <script>
 
-  const STORAGE_KEY = "keyflame_games";
+  const CURRENT_USERNAME = (sessionStorage.getItem("keyflame_user") || "").trim();
 
-  let games = JSON.parse(
-    localStorage.getItem(STORAGE_KEY) || "[]"
-  );
+  if (!CURRENT_USERNAME) {
+    window.location.href = "login.html";
+  }
+
+  const STORAGE_KEY = "keyflame_games_" + CURRENT_USERNAME;
+
+  let games = [];
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    games = Array.isArray(saved) ? saved : [];
+    games.forEach(game => {
+      if (!Array.isArray(game.notes)) game.notes = [];
+    });
+  } catch {
+    games = [];
+  }
 
   let selectedGameId = null;
 
