@@ -965,11 +965,21 @@ margin-left: 250px;
        PROFILE
     -------------------------------- */
 
-    const defaultProfile = {
-      name: "Kian",
-      username: "kian6203",
-      picture: ""
-    };
+    const CURRENT_USERNAME =
+      (sessionStorage.getItem("keyflame_user") || "").trim();
+
+    if (!CURRENT_USERNAME) {
+      window.location.href = "login.html";
+    }
+
+    const PROFILE_KEY = "keyflame_profile_" + CURRENT_USERNAME;
+    const ACCOUNT_KEY = "keyflame_account_" + CURRENT_USERNAME;
+    const GAMES_KEY = "keyflame_games_" + CURRENT_USERNAME;
+
+    const defaultProfile =
+      CURRENT_USERNAME === "admin"
+        ? { name: "Admin", username: "admin", picture: "" }
+        : { name: "Kian", username: "kian6203", picture: "" };
 
     function loadProfile() {
 
@@ -978,7 +988,7 @@ margin-left: 250px;
       try {
 
         const saved =
-          JSON.parse(localStorage.getItem("keyflame_profile"));
+          JSON.parse(localStorage.getItem(PROFILE_KEY));
 
         if (saved && typeof saved === "object") {
           profile = {
@@ -1043,8 +1053,16 @@ margin-left: 250px;
        AB BUCKS DATA
     -------------------------------- */
 
-    const STORAGE_KEY =
-      "keyflame_admin_data";
+    const STORAGE_KEY = ACCOUNT_KEY;
+
+    function migrateLegacyAccount() {
+      if (CURRENT_USERNAME === "kian6203" && !localStorage.getItem(STORAGE_KEY)) {
+        const legacy = localStorage.getItem("keyflame_admin_data");
+        if (legacy) localStorage.setItem(STORAGE_KEY, legacy);
+      }
+    }
+
+    migrateLegacyAccount();
 
     function loadData() {
 
@@ -1271,7 +1289,7 @@ margin-left: 250px;
       try {
 
         const saved =
-          JSON.parse(localStorage.getItem("keyflame_games"));
+          JSON.parse(localStorage.getItem(GAMES_KEY));
 
         if (Array.isArray(saved)) {
           games = saved;
