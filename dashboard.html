@@ -990,8 +990,8 @@ margin-left: 250px;
     const GAMES_KEY = "keyflame_games_" + CURRENT_USERNAME;
 
     const defaultProfile =
-      CURRENT_USERNAME === "admin"
-        ? { name: "Admin", username: "admin", picture: "" }
+      CURRENT_USERNAME === "aayu1120"
+        ? { name: "Aayu", username: "aayu1120", picture: "" }
         : { name: "Kian", username: "kian6203", picture: "" };
 
     function loadProfile() {
@@ -1015,10 +1015,10 @@ margin-left: 250px;
       }
 
       const name =
-        profile.name?.trim() || "Kian";
+        profile.name?.trim() || (CURRENT_USERNAME === "aayu1120" ? "Aayu" : "Kian");
 
       const username =
-        profile.username?.trim() || "kian6203";
+        profile.username?.trim() || CURRENT_USERNAME;
 
       document.getElementById("welcomeTitle").textContent =
         `Welcome back, ${name}.`;
