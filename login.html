@@ -327,7 +327,7 @@
 
                 if (
                     (username === "admin" && password === "1234") ||
-                    (username === "brother" && password === "1234")
+                    (username === "kian6203" && password === "1234")
                 ) {
 
                     sessionStorage.setItem(
@@ -335,7 +335,7 @@
                         username
                     );
 
-                    window.location.href = "dashboard.html";
+                    window.location.href = username === "admin" ? "admin.html" : "dashboard.html";
 
                 } else {
 
