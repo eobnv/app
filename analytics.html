@@ -560,7 +560,10 @@ canvas {
 
 <script>
 
-const CURRENT_USERNAME = (sessionStorage.getItem("keyflame_user") || "kian6203").trim() || "kian6203";
+const CURRENT_USERNAME = (sessionStorage.getItem("keyflame_user") || "").trim();
+if (!CURRENT_USERNAME) {
+  window.location.href = "login.html";
+}
 const STORAGE_KEY = "keyflame_account_" + CURRENT_USERNAME;
 
 let currentRange = 7;
