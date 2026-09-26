@@ -293,6 +293,7 @@ body {
         <a href="history.html">History</a>
         <a href="analytics.html">Analytics</a>
         <a href="profile.html">Profile</a>
+        <a href="settings.html">Settings</a>
     </nav>
 
     <button class="logout" onclick="logout()">Log Out</button>
@@ -478,13 +479,6 @@ function logout() {
 
     sessionStorage.removeItem("keyflame_user");
     window.location.href = "login.html";
-}
-
-function comingSoon(event) {
-
-    event.preventDefault();
-
-    alert("This section is coming next.");
 }
 
 render();
