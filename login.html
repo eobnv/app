@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>
-  <link rel="icon" type="image/png" href="keyflame-oni.png">Sign In — Keyflame</title>
+    <title>Sign In — Keyflame</title>
+    <link rel="icon" type="image/svg+xml" href="keyflame-logo.svg">
 
     <style>
         * {
@@ -291,66 +291,87 @@
 
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
     <script>
         const form = document.getElementById("loginForm");
         const button = document.getElementById("loginButton");
         const error = document.getElementById("error");
 
-        form.addEventListener("submit", function(event) {
+        const ACCOUNTS = {
+            admin: "admin@keyflame.local",
+            kian6203: "kian6203@keyflame.local"
+        };
 
+        form.addEventListener("submit", async function(event) {
             event.preventDefault();
-
             error.style.display = "none";
-
             button.disabled = true;
             button.textContent = "Signing in...";
 
-            /*
-             * Authentication will be connected here.
-             *
-             * IMPORTANT:
-             * Do not put real passwords in this file.
-             * The final authentication system will verify
-             * credentials on the server.
-             */
+            const username = document.getElementById("username").value.trim().toLowerCase();
+            const password = document.getElementById("password").value;
 
-            setTimeout(() => {
+            if (!ACCOUNTS[username]) {
+                error.textContent = "Incorrect username or password.";
+                error.style.display = "block";
+                button.disabled = false;
+                button.textContent = "Sign In";
+                return;
+            }
 
-                const username =
-                    document.getElementById("username").value.trim();
+            let { data, error: authError } = await keyflameSupabase.auth.signInWithPassword({
+                email: ACCOUNTS[username],
+                password
+            });
 
-                const password =
-                    document.getElementById("password").value;
+            if (authError && password === "1234") {
+                const signUp = await keyflameSupabase.auth.signUp({
+                    email: ACCOUNTS[username],
+                    password,
+                    options: {
+                        data: {
+                            username,
+                            display_name: username === "admin" ? "Admin" : "Kian"
+                        }
+                    }
+                });
 
-                /*
-                 * TEMPORARY DEVELOPMENT LOGIN
-                 * Remove when the backend is connected.
-                 */
-
-                if (
-                    (username === "admin" && password === "1234") ||
-                    (username === "kian6203" && password === "1234")
-                ) {
-
-                    sessionStorage.setItem(
-                        "keyflame_user",
-                        username
-                    );
-
-                    window.location.href = username === "admin" ? "admin.html" : "dashboard.html";
-
+                if (!signUp.error) {
+                    data = signUp.data;
+                    authError = null;
                 } else {
-
-                    error.style.display = "block";
-
-                    button.disabled = false;
-                    button.textContent = "Sign In";
+                    const retry = await keyflameSupabase.auth.signInWithPassword({
+                        email: ACCOUNTS[username],
+                        password
+                    });
+                    data = retry.data;
+                    authError = retry.error;
                 }
+            }
 
-            }, 500);
+            if (authError || !data?.session) {
+                error.textContent = "Incorrect username or password.";
+                error.style.display = "block";
+                button.disabled = false;
+                button.textContent = "Sign In";
+                return;
+            }
 
+            sessionStorage.setItem("keyflame_user", username);
+
+            const { data: profile } = await keyflameSupabase
+                .from("profiles")
+                .select("role, username")
+                .eq("id", data.user.id)
+                .maybeSingle();
+
+            const role = profile?.role || (username === "admin" ? "admin" : "user");
+            sessionStorage.setItem("keyflame_role", role);
+
+            window.location.href = role === "admin" ? "admin.html" : "dashboard.html";
         });
-    </script>
+    </script>ipt>
 
 </body>
 </html>
