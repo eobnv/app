@@ -132,6 +132,7 @@ input:focus,textarea:focus,select:focus{
   gap:5px!important;
 }
 .nav button,.nav-link{
+  text-decoration:none!important;
   width:100%!important;
   display:flex!important;
   align-items:center!important;
