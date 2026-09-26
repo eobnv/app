@@ -297,11 +297,6 @@
         const button = document.getElementById("loginButton");
         const error = document.getElementById("error");
 
-        const ACCOUNTS = {
-            admin: "admin@keyflame.local",
-            kian6203: "kian6203@keyflame.local"
-        };
-
         form.addEventListener("submit", async function(event) {
             event.preventDefault();
             error.style.display = "none";
@@ -311,43 +306,12 @@
             const username = document.getElementById("username").value.trim().toLowerCase();
             const password = document.getElementById("password").value;
 
-            if (!ACCOUNTS[username]) {
-                error.textContent = "Incorrect username or password.";
-                error.style.display = "block";
-                button.disabled = false;
-                button.textContent = "Sign In";
-                return;
-            }
+            const email = username + "@keyflame.app";
 
-            let { data, error: authError } = await keyflameSupabase.auth.signInWithPassword({
-                email: ACCOUNTS[username],
+            const { data, error: authError } = await keyflameSupabase.auth.signInWithPassword({
+                email,
                 password
             });
-
-            if (authError && password === "1234") {
-                const signUp = await keyflameSupabase.auth.signUp({
-                    email: ACCOUNTS[username],
-                    password,
-                    options: {
-                        data: {
-                            username,
-                            display_name: username === "admin" ? "Admin" : "Kian"
-                        }
-                    }
-                });
-
-                if (!signUp.error) {
-                    data = signUp.data;
-                    authError = null;
-                } else {
-                    const retry = await keyflameSupabase.auth.signInWithPassword({
-                        email: ACCOUNTS[username],
-                        password
-                    });
-                    data = retry.data;
-                    authError = retry.error;
-                }
-            }
 
             if (authError || !data?.session) {
                 error.textContent = "Incorrect username or password.";
