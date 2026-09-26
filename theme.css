@@ -1,246 +1,199 @@
-/* Keyflame shared visual system */
+/* Keyflame — 2026 visual system
+   GitHub-like product UI + WADAYA-inspired blue/pink/black identity.
+*/
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap");
+
 :root{
-  --kf-bg:#090809;
-  --kf-panel:rgba(20,18,20,.78);
-  --kf-border:rgba(240,90,169,.18);
-  --kf-pink:#f05aa9;
-  --kf-pink-light:#ff9dcc;
-  --kf-text:#fff;
-  --kf-muted:#aaa;
-  --kf-shadow:0 25px 70px rgba(0,0,0,.35);
+  --kf-bg:#070b12;
+  --kf-bg-2:#0b1220;
+  --kf-panel:#0d1522;
+  --kf-panel-2:#111c2b;
+  --kf-border:#26374d;
+  --kf-border-soft:#1b2a3c;
+  --kf-blue:#42a5ff;
+  --kf-blue-strong:#1f8fff;
+  --kf-cyan:#73d9ff;
+  --kf-pink:#ff6fbd;
+  --kf-pink-soft:#ff9bd2;
+  --kf-text:#f3f7fb;
+  --kf-muted:#8b9aab;
+  --kf-green:#3ddc97;
+  --kf-red:#ff718f;
+  --kf-shadow:0 18px 55px rgba(0,0,0,.28);
+  --kf-radius:10px;
+  --kf-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,monospace;
+  --kf-display:"Zen Kaku Gothic New","Space Grotesk",Arial,sans-serif;
 }
+
+html{scroll-behavior:smooth}
 body{
+  font-family:var(--kf-display)!important;
   background:
-    radial-gradient(circle at 15% 15%,rgba(240,90,169,.10),transparent 30%),
-    radial-gradient(circle at 85% 80%,rgba(240,90,169,.07),transparent 32%),
-    var(--kf-bg)!important;
-  color:var(--kf-text);
+    radial-gradient(circle at 12% 8%,rgba(66,165,255,.09),transparent 28%),
+    radial-gradient(circle at 88% 82%,rgba(255,111,189,.07),transparent 30%),
+    linear-gradient(180deg,#070b12 0%,#080d16 55%,#060a10 100%)!important;
+  color:var(--kf-text)!important;
 }
 body::before{
   content:"";
   position:fixed;
-  z-index:-1;
+  inset:0;
   pointer-events:none;
-  width:700px;
-  height:900px;
-  right:-80px;
-  bottom:-120px;
-  opacity:.55;
-  background:url("sakura.svg") center/contain no-repeat;
-  filter:drop-shadow(0 0 24px rgba(240,90,169,.08));
+  z-index:-1;
+  background:
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
+  background-size:32px 32px;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.65),transparent 78%);
 }
 body::after{
   content:"";
   position:fixed;
-  z-index:-1;
-  pointer-events:none;
-  left:-80px;
-  top:-90px;
-  width:330px;
-  height:330px;
+  width:420px;height:420px;
+  right:-170px;top:-160px;
   border-radius:50%;
-  background:rgba(240,90,169,.08);
-  filter:blur(90px);
-}
-button{
-  transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease,background .2s ease;
-}
-button:hover{transform:translateY(-1px)}
-.card,.glass,.section,.panel,.preview,.login-card,.top-profile{
-  background:var(--kf-panel)!important;
-  border-color:var(--kf-border)!important;
-  box-shadow:var(--kf-shadow);
-  backdrop-filter:blur(20px);
-}
-input,textarea,select{
-  background:rgba(9,8,9,.72)!important;
-  border-color:rgba(255,255,255,.10)!important;
-  color:#fff!important;
-}
-input:focus,textarea:focus,select:focus{
-  border-color:rgba(240,90,169,.75)!important;
-  box-shadow:0 0 0 3px rgba(240,90,169,.10),0 0 25px rgba(240,90,169,.08)!important;
-}
-.pink,.add,.login-button{
-  background:linear-gradient(135deg,#f05aa9,#ff78bd)!important;
-}
-.pink:hover,.add:hover,.login-button:hover{
-  box-shadow:0 12px 30px rgba(240,90,169,.22);
+  pointer-events:none;
+  z-index:-1;
+  background:radial-gradient(circle,rgba(66,165,255,.12),transparent 68%);
+  filter:blur(20px);
+  transform:translate3d(calc(var(--kf-mx,0) * 10px),calc(var(--kf-my,0) * 10px),0);
+  transition:transform .35s ease-out;
 }
 
-/* Dashboard-style taskbar shared by all logged-in pages */
+h1,h2,h3,h4,.brand-name,.section-title,.stat-value,.balance{
+  font-family:var(--kf-display)!important;
+}
+code,pre,.eyebrow,.nav-title,.profile-mini-user,.activity-time{
+  font-family:var(--kf-mono)!important;
+}
+
+a{color:inherit}
+button,input,textarea,select{font-family:inherit!important}
+button{cursor:pointer}
+
+.card,.glass,.section,.panel,.preview,.login-card,.top-profile,.stat-card,.activity,.game-card{
+  background:rgba(13,21,34,.88)!important;
+  border:1px solid var(--kf-border)!important;
+  border-radius:var(--kf-radius)!important;
+  box-shadow:var(--kf-shadow)!important;
+  backdrop-filter:blur(14px)!important;
+}
+.card:hover,.glass:hover,.section:hover,.panel:hover,.stat-card:hover,.game-card:hover{
+  border-color:#35506d!important;
+}
+
+input,textarea,select{
+  background:#09111c!important;
+  color:var(--kf-text)!important;
+  border:1px solid var(--kf-border)!important;
+  border-radius:7px!important;
+}
+input:focus,textarea:focus,select:focus{
+  border-color:var(--kf-blue)!important;
+  outline:none!important;
+  box-shadow:0 0 0 3px rgba(66,165,255,.12)!important;
+}
+
+button,.login-button,.view-bucks,.pink,.add{
+  border-radius:7px!important;
+}
+button:hover,.login-button:hover,.view-bucks:hover,.pink:hover,.add:hover{
+  transform:translateY(-1px);
+}
+.login-button,.pink,.add{
+  background:linear-gradient(135deg,var(--kf-blue-strong),#1674d5)!important;
+  box-shadow:0 7px 22px rgba(31,143,255,.16)!important;
+}
+.login-button:hover,.pink:hover,.add:hover{
+  box-shadow:0 10px 28px rgba(31,143,255,.24)!important;
+}
+
+.brand-mark,.kf-logo-mark{
+  background:#ff6fbd url("keyflame-logo.svg") center/100% 100% no-repeat!important;
+  border-radius:9px!important;
+  box-shadow:0 5px 18px rgba(255,111,189,.16)!important;
+}
+
 .sidebar{
-  width:250px!important;
-  min-width:250px!important;
-  max-width:250px!important;
-  flex:0 0 250px!important;
-  box-sizing:border-box!important;
-  padding:24px 16px!important;
-  background:rgba(10,8,11,.88)!important;
-  border-right:1px solid rgba(255,105,180,.18)!important;
-  backdrop-filter:blur(22px);
-  display:flex!important;
-  flex-direction:column!important;
+  background:#080e17!important;
+  border-right:1px solid var(--kf-border-soft)!important;
+  box-shadow:8px 0 30px rgba(0,0,0,.16);
 }
-.brand{
-  display:flex!important;
-  align-items:center!important;
-  gap:11px!important;
-  padding:8px 10px 28px!important;
-  color:inherit!important;
-  text-decoration:none!important;
-}
-.brand-mark{
-  width:38px!important;
-  height:38px!important;
-  flex:0 0 38px!important;
-  border-radius:12px!important;
-  display:grid!important;
-  place-items:center!important;
-  background:#f05aa9 url("keyflame-logo.svg") center/100% 100% no-repeat!important;
-  box-shadow:0 0 25px rgba(255,92,168,.28)!important;
-  font-weight:900!important;
-  color:transparent!important;
-  font-size:0!important;
-}
-.brand-name{
-  font-size:20px!important;
-  font-weight:800!important;
-  letter-spacing:-.5px!important;
-}
-.nav-title{
-  color:#6f6871!important;
-  font-size:10px!important;
-  font-weight:700!important;
-  letter-spacing:1.5px!important;
-  padding:0 12px 10px!important;
-}
-.nav{
-  display:flex!important;
-  flex-direction:column!important;
-  gap:5px!important;
-}
+.brand{border-bottom:1px solid var(--kf-border-soft);margin-bottom:18px}
+.brand-name{letter-spacing:-.7px!important}
+.nav-title{color:#65768a!important}
 .nav-link{
-  text-decoration:none!important;
-  width:100%!important;
-  display:flex!important;
-  align-items:center!important;
-  gap:12px!important;
-  min-height:44px!important;
-  padding:12px 13px!important;
-  border-radius:12px!important;
+  border-radius:7px!important;
+  color:#93a1b0!important;
   border:1px solid transparent!important;
-  background:transparent!important;
-  color:#aaa3ad!important;
-  text-align:left!important;
-  font-size:inherit!important;
 }
 .nav-link:hover{
-  color:#fff!important;
-  background:rgba(255,92,168,.08)!important;
-  border-color:rgba(255,92,168,.10)!important;
-  transform:translateX(2px)!important;
+  color:#eaf3fb!important;
+  background:#101d2c!important;
+  border-color:#20344b!important;
+  transform:none!important;
 }
 .nav-link.active{
   color:#fff!important;
-  background:linear-gradient(90deg,rgba(255,92,168,.16),rgba(255,92,168,.05))!important;
-  border-color:rgba(255,92,168,.16)!important;
-  box-shadow:none!important;
+  background:linear-gradient(90deg,rgba(31,143,255,.15),rgba(255,111,189,.055))!important;
+  border-color:#254564!important;
+  box-shadow:inset 3px 0 0 var(--kf-blue)!important;
 }
-.nav-icon{
-  width:20px!important;
-  flex:0 0 20px!important;
-  text-align:center!important;
-  font-size:16px!important;
-}
+.nav-icon{color:var(--kf-cyan)!important}
 .profile-mini{
-  display:flex!important;
-  align-items:center!important;
-  gap:11px!important;
-  padding:12px!important;
-  border:1px solid rgba(255,105,180,.18)!important;
-  border-radius:15px!important;
-  background:rgba(255,255,255,.025)!important;
-  margin-bottom:10px!important;
-  color:inherit!important;
-  text-decoration:none!important;
+  border-color:var(--kf-border-soft)!important;
+  background:#0b1420!important;
+  border-radius:8px!important;
 }
-.profile-mini:hover{
-  border-color:rgba(255,92,168,.35)!important;
-  transform:translateY(-1px)!important;
-}
+.profile-mini:hover{border-color:#35506d!important;transform:none!important}
 .avatar{
-  width:38px!important;
-  height:38px!important;
-  flex:0 0 38px!important;
-  border-radius:50%!important;
-  background:linear-gradient(135deg,rgba(255,92,168,.9),rgba(255,157,204,.45))!important;
-  display:grid!important;
-  place-items:center!important;
-  font-weight:800!important;
-  overflow:hidden!important;
+  background:linear-gradient(135deg,#1f8fff,#ff6fbd)!important;
 }
-.avatar img{width:100%!important;height:100%!important;object-fit:cover!important}
-.profile-mini-text{min-width:0!important}
-.profile-mini-name{font-size:13px!important;font-weight:700!important}
-.profile-mini-user{color:#aaa3ad!important;font-size:11px!important;margin-top:2px!important;overflow:hidden!important;text-overflow:ellipsis!important}
-.logout.nav-link{margin-top:0!important}
+
+.eyebrow{
+  color:var(--kf-cyan)!important;
+  letter-spacing:1.6px!important;
+}
+.subtitle,.stat-label,.balance-label{color:var(--kf-muted)!important}
+.balance-card{
+  background:
+    linear-gradient(135deg,rgba(31,143,255,.10),rgba(255,111,189,.055) 65%),
+    #0d1522!important;
+}
+.currency{color:var(--kf-cyan)!important}
+.green{color:var(--kf-green)!important}
+.red{color:var(--kf-red)!important}
+
+.section-link{color:var(--kf-cyan)!important}
+.section-link:hover{color:#fff!important}
+.activity-icon.add{color:var(--kf-green)!important;background:rgba(61,220,151,.08)!important}
+.activity-icon.remove{color:var(--kf-red)!important;background:rgba(255,113,143,.08)!important}
+
+.toast{
+  background:#0d1724!important;
+  border-color:#294764!important;
+}
+
+.kf-reveal{
+  opacity:0;
+  transform:translateY(14px);
+  transition:opacity .55s ease,transform .55s ease;
+}
+.kf-reveal.kf-visible{opacity:1;transform:none}
+
+@media(prefers-reduced-motion:reduce){
+  *{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}
+  .kf-reveal{opacity:1;transform:none}
+}
+
 @media(max-width:750px){
   .sidebar{
-    position:fixed!important;
-    left:0!important;
-    top:0!important;
-    right:0!important;
-    bottom:auto!important;
-    width:100%!important;
-    min-width:100%!important;
-    max-width:none!important;
-    flex:0 0 auto!important;
-    height:auto!important;
-    min-height:0!important;
-    padding:10px 12px!important;
-    flex-direction:row!important;
-    align-items:center!important;
-    border-right:none!important;
-    border-bottom:1px solid rgba(255,105,180,.18)!important;
+    background:#080e17!important;
+    border-bottom:1px solid var(--kf-border-soft)!important;
   }
-  .brand{padding:0!important}
-  .brand-name{font-size:17px!important}
-  .brand-mark{width:34px!important;height:34px!important;flex-basis:34px!important}
-  .nav-title,.sidebar-bottom,.nav-link span:not(.nav-icon){display:none!important}
-  .nav{margin-left:auto!important;flex-direction:row!important;gap:3px!important}
-  .nav-link{width:38px!important;min-width:38px!important;height:38px!important;min-height:38px!important;padding:0!important;justify-content:center!important}
-  .main{margin-left:0!important;width:100%!important;padding-top:85px!important}
-}
-.main{
-  margin-left:250px!important;
-  width:calc(100% - 250px)!important;
-}
-@media(max-width:750px){
-  .main{margin-left:0!important;width:100%!important}
 }
 
-
-/* K logo mark used by public/login branding */
-.kf-logo-mark{
-  width:38px;
-  height:38px;
-  display:inline-grid;
-  place-items:center;
-  margin-right:9px;
-  border-radius:12px;
-  background:#f05aa9 url("keyflame-logo.svg") center/100% 100% no-repeat;
-  color:transparent;
-  font-size:0;
-  font-weight:900;
-  vertical-align:middle;
-  box-shadow:0 0 25px rgba(240,90,169,.24);
-}
-
-/* Keep the original Keyflame K logo: pink square, white K */
-.logo .kf-logo-mark{
-  color:transparent!important;
-  background:#f05aa9 url("keyflame-logo.svg") center/100% 100% no-repeat!important;
-  font-size:0!important;
-  line-height:1!important;
+/* Public/login surfaces */
+nav,.hero,.feature,.support-card,.login-card{
+  border-color:var(--kf-border)!important;
 }
