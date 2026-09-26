@@ -732,6 +732,11 @@ function goAnalytics(){location.href="analytics.html";}
 function goSettings(){location.href="settings.html";}
 function goProfile(){location.href="profile.html";}
 
+const loggedUser = (sessionStorage.getItem("keyflame_user") || "").trim();
+if (loggedUser !== "admin") {
+  window.location.href = "dashboard.html";
+}
+
 
 const TARGET_USERNAME = "kian6203";
 const STORAGE_KEY = "keyflame_account_" + TARGET_USERNAME;
