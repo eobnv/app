@@ -97,10 +97,11 @@ input:focus,textarea:focus,select:focus{
   border-radius:12px!important;
   display:grid!important;
   place-items:center!important;
-  background:linear-gradient(135deg,#ff5ca8,#ff3f96)!important;
+  background:#f05aa9 url("keyflame-logo.svg") center/100% 100% no-repeat!important;
   box-shadow:0 0 25px rgba(255,92,168,.28)!important;
   font-weight:900!important;
-  color:#fff!important;
+  color:transparent!important;
+  font-size:0!important;
 }
 .brand-name{
   font-size:20px!important;
@@ -228,9 +229,9 @@ input:focus,textarea:focus,select:focus{
   place-items:center;
   margin-right:9px;
   border-radius:12px;
-  background:#f05aa9;
-  color:#fff;
-  font-size:22px;
+  background:#f05aa9 url("keyflame-logo.svg") center/100% 100% no-repeat;
+  color:transparent;
+  font-size:0;
   font-weight:900;
   vertical-align:middle;
   box-shadow:0 0 25px rgba(240,90,169,.24);
@@ -238,8 +239,8 @@ input:focus,textarea:focus,select:focus{
 
 /* Keep the original Keyflame K logo: pink square, white K */
 .logo .kf-logo-mark{
-  color:#fff!important;
-  background:#f05aa9!important;
-  font-size:22px!important;
+  color:transparent!important;
+  background:#f05aa9 url("keyflame-logo.svg") center/100% 100% no-repeat!important;
+  font-size:0!important;
   line-height:1!important;
 }
