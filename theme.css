@@ -79,3 +79,20 @@ input:focus,textarea:focus,select:focus{
 .nav-link:hover,.nav button:hover{
   background:rgba(240,90,169,.08)!important;
 }
+
+/* Fixed sidebar: identical width on every logged-in page */
+.sidebar{
+  width:250px!important;
+  min-width:250px!important;
+  max-width:250px!important;
+  flex:0 0 250px!important;
+  box-sizing:border-box!important;
+}
+@media (max-width:850px){
+  .sidebar{
+    width:200px!important;
+    min-width:200px!important;
+    max-width:200px!important;
+    flex:0 0 200px!important;
+  }
+}
