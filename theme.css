@@ -219,3 +219,19 @@ input:focus,textarea:focus,select:focus{
   .main{margin-left:0!important;width:100%!important}
 }
 
+
+/* K logo mark used by public/login branding */
+.kf-logo-mark{
+  width:38px;
+  height:38px;
+  display:inline-grid;
+  place-items:center;
+  margin-right:9px;
+  border-radius:12px;
+  background:#f05aa9;
+  color:#fff;
+  font-size:22px;
+  font-weight:900;
+  vertical-align:middle;
+  box-shadow:0 0 25px rgba(240,90,169,.24);
+}
