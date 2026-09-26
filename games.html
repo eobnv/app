@@ -562,51 +562,70 @@ margin-left: 250px;
 
   <aside class="sidebar">
 
-    <div class="logo">
-      Key<span>flame</span>
-    </div>
+      <a href="index.html" class="brand">
+        <div class="brand-mark">K</div>
+        <div class="brand-name">Keyflame</div>
+      </a>
 
-    <div class="nav-title">Menu</div>
+      <div class="nav-title">Menu</div>
 
-    <nav class="nav">
+      <nav class="nav">
 
-      <button onclick="goDashboard()">
-        Dashboard
-      </button>
+        <a href="dashboard.html" class="nav-link" onclick=">
+          <span class="nav-icon">⌂</span>
+          <span>Dashboard</span>
+        </a>
 
-      <button class="active" onclick="goGames()">
-        Games
-      </button>
+        <a href="games.html" class="nav-link active" onclick=">
+          <span class="nav-icon">▣</span>
+          <span>Games</span>
+        </a>
 
-      <button onclick="goBucks()">
-        AB Bucks
-      </button>
+        <a href="bucks.html" class="nav-link" onclick=">
+          <span class="nav-icon">¥</span>
+          <span>AB Bucks</span>
+        </a>
 
-      <button onclick="goHistory()">
-        History
-      </button>
+        <a href="history.html" class="nav-link" onclick=">
+          <span class="nav-icon">↺</span>
+          <span>History</span>
+        </a>
 
-      <button onclick="goAnalytics()">
-        Analytics
-      </button>
+        <a href="analytics.html" class="nav-link" onclick=">
+          <span class="nav-icon">⌁</span>
+          <span>Analytics</span>
+        </a>
 
-      <button onclick="goProfile()">
-        Profile
-      </button>
+        <a href="profile.html" class="nav-link" onclick=">
+          <span class="nav-icon">◉</span>
+          <span>Profile</span>
+        </a>
 
-      <button onclick="goSettings()">
-        Settings
-      </button>
+        <a href="settings.html" class="nav-link" onclick=">
+          <span class="nav-icon">⚙</span>
+          <span>Settings</span>
+        </a>
 
-    </nav>
+      </nav>
 
-    <div class="logout">
-      <button onclick="logout()">
-        Log Out
-      </button>
-    </div>
+      <div class="sidebar-bottom">
 
-  </aside>
+        <a href="profile.html" class="profile-mini" id="sidebarProfile">
+          <div class="avatar" id="sidebarAvatar">K</div>
+          <div class="profile-mini-text">
+            <div class="profile-mini-name" id="sidebarName">Kian</div>
+            <div class="profile-mini-user" id="sidebarUsername">kian6203</div>
+          </div>
+        </a>
+
+        <a href="#" class="nav-link logout" id="logoutBtn">
+          <span class="nav-icon">↪</span>
+          <span>Logout</span>
+        </a>
+
+      </div>
+
+    </aside>
 
 
   <!-- MAIN -->
