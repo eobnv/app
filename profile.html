@@ -811,9 +811,7 @@
     try {
 
       const saved =
-        localStorage.getItem(
-          "keyflame_admin_data"
-        );
+        localStorage.getItem("keyflame_account_" + CURRENT_USERNAME);
 
 
       if (!saved) {
