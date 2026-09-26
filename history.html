@@ -349,8 +349,8 @@ tr:hover td {
       <button onclick="go('games.html')">Games</button>
       <button onclick="go('bucks.html')">AB Bucks</button>
       <button class="active">History</button>
-      <button onclick="comingSoon('Analytics')">Analytics</button>
-      <button onclick="comingSoon('Profile')">Profile</button>
+      <button onclick="go('analytics.html')">Analytics</button>
+      <button onclick="go('profile.html')">Profile</button>
     </div>
 
     <div class="logout">
@@ -370,7 +370,7 @@ tr:hover td {
 
       <div class="balance">
         <small>Current Balance</small>
-        <strong id="balance">0 AB</strong>
+        <strong id="balance">¥0</strong>
       </div>
 
     </div>
@@ -543,7 +543,7 @@ function render() {
   const transactions = [...data.transactions].reverse();
 
   document.getElementById("balance").textContent =
-    `${data.balance} AB`;
+    `¥${data.balance}`;
 
   buildGameFilter(data.transactions);
 
@@ -616,7 +616,7 @@ function render() {
     const isAdd = amount >= 0;
 
     const amountText =
-      `${isAdd ? "+" : ""}${amount} AB`;
+      `${isAdd ? "+" : ""}¥${amount}`;
 
     const balanceAfter =
       transaction.balanceAfter ??
@@ -633,7 +633,7 @@ function render() {
         </td>
 
         <td>
-          ${escapeHTML(balanceAfter)} AB
+          ¥${escapeHTML(balanceAfter)}
         </td>
 
         <td>
