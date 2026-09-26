@@ -872,11 +872,18 @@ margin-left: 250px;
 
 <script>
 
+  const CURRENT_USERNAME =
+    (sessionStorage.getItem("keyflame_user") || "").trim();
+
+  if (!CURRENT_USERNAME) {
+    window.location.href = "login.html";
+  }
+
   const SETTINGS_KEY =
-    "keyflame_settings";
+    "keyflame_settings_" + CURRENT_USERNAME;
 
   const PASSWORD_KEY =
-    "keyflame_password";
+    "keyflame_password_" + CURRENT_USERNAME;
 
 
   const DEFAULT_SETTINGS = {
