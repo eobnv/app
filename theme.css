@@ -23,22 +23,11 @@ body::before{
   position:fixed;
   z-index:-1;
   pointer-events:none;
-  width:520px;height:760px;
-  right:-90px;bottom:-120px;
-  opacity:.28;
-  transform:rotate(-5deg);
-  background:
-    radial-gradient(circle at 35% 18%,#ff9dcc 0 7px,transparent 8px),
-    radial-gradient(circle at 52% 27%,#f05aa9 0 6px,transparent 7px),
-    radial-gradient(circle at 25% 36%,#ffb0d6 0 7px,transparent 8px),
-    radial-gradient(circle at 61% 42%,#f05aa9 0 7px,transparent 8px),
-    radial-gradient(circle at 42% 54%,#ff9dcc 0 6px,transparent 7px),
-    radial-gradient(circle at 74% 58%,#ffb0d6 0 7px,transparent 8px),
-    radial-gradient(circle at 50% 72%,#f05aa9 0 7px,transparent 8px),
-    linear-gradient(125deg,transparent 44%,rgba(105,55,73,.85) 45% 48%,transparent 49%),
-    linear-gradient(155deg,transparent 38%,rgba(105,55,73,.72) 39% 42%,transparent 43%),
-    linear-gradient(105deg,transparent 53%,rgba(105,55,73,.68) 54% 57%,transparent 58%);
-  filter:drop-shadow(0 0 18px rgba(240,90,169,.08));
+  width:700px;height:900px;
+  right:-80px;bottom:-120px;
+  opacity:.55;
+  background:url("sakura.svg") center/contain no-repeat;
+  filter:drop-shadow(0 0 24px rgba(240,90,169,.08));
 }
 body::after{
   content:"";
