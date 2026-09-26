@@ -479,8 +479,8 @@ margin-left: 250px;
           @kian6203
         </div>
 
-        <div class="type">
-          Brother Account
+        <div class="type" id="accountType">
+          Account
         </div>
 
       </div>
@@ -681,26 +681,43 @@ margin-left: 250px;
 
 <script>
 
-  const PROFILE_KEY = "keyflame_profile";
+  const CURRENT_USERNAME =
+    (sessionStorage.getItem("keyflame_user") || "kian6203").trim() || "kian6203";
 
+  const PROFILE_KEY =
+    "keyflame_profile_" + CURRENT_USERNAME;
 
-  const DEFAULT_PROFILE = {
+  const LEGACY_PROFILE_KEY = "keyflame_profile";
 
-    name: "Kian",
+  const IS_ADMIN = CURRENT_USERNAME === "admin";
 
-    username: "kian6203",
-
-    picture: ""
-
-  };
+  const DEFAULT_PROFILE = IS_ADMIN
+    ? {
+        name: "Admin",
+        username: "admin",
+        picture: ""
+      }
+    : {
+        name: "Kian",
+        username: "kian6203",
+        picture: ""
+      };
 
 
   function getProfile() {
 
     try {
 
-      const saved =
+      let saved =
         localStorage.getItem(PROFILE_KEY);
+
+      if (!saved && !IS_ADMIN && CURRENT_USERNAME === "kian6203") {
+        saved = localStorage.getItem(LEGACY_PROFILE_KEY);
+
+        if (saved) {
+          localStorage.setItem(PROFILE_KEY, saved);
+        }
+      }
 
       if (!saved) {
 
@@ -756,8 +773,13 @@ margin-left: 250px;
     ).textContent =
       "@" + (
         profile.username ||
-        "kian6203"
+        DEFAULT_PROFILE.username
       );
+
+    document.getElementById(
+      "accountType"
+    ).textContent =
+      IS_ADMIN ? "Admin Account" : "User Account";
 
 
     const avatarImage =
