@@ -47,12 +47,13 @@ form.addEventListener("submit",async e=>{
  const password=document.getElementById("password").value;
  const confirm=document.getElementById("confirm").value;
  if(!/^[a-z0-9_]{3,30}$/.test(username)){error.textContent="Use 3–30 letters, numbers, or underscores.";error.style.display="block";return}
+ if(username==="admin"){error.textContent="The admin username is reserved.";error.style.display="block";return}
  if(password!==confirm){error.textContent="The passwords do not match.";error.style.display="block";return}
  button.disabled=true;button.textContent="Creating account...";
  try{
   const exists=await keyflameSupabase.from("profiles").select("id").eq("username",username).maybeSingle();
   if(exists.data){throw new Error("That username is already taken.")}
-  const email=username+"@keyflame.local";
+  const email=username+"@keyflame.app";
   const result=await keyflameSupabase.auth.signUp({email,password,options:{data:{username,display_name:displayName}}});
   if(result.error) throw result.error;
   if(!result.data.session){
