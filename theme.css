@@ -1,0 +1,57 @@
+/* Keyflame shared Sakura theme */
+:root{
+  --kf-bg:#090809;
+  --kf-panel:rgba(20,18,20,.78);
+  --kf-panel-solid:#141214;
+  --kf-border:rgba(240,90,169,.18);
+  --kf-border-soft:#252125;
+  --kf-pink:#f05aa9;
+  --kf-pink-light:#ff9dcc;
+  --kf-text:#fff;
+  --kf-muted:#aaa;
+  --kf-shadow:0 25px 70px rgba(0,0,0,.35);
+}
+body{
+  background:
+    radial-gradient(circle at 15% 15%,rgba(240,90,169,.10),transparent 30%),
+    radial-gradient(circle at 85% 80%,rgba(240,90,169,.07),transparent 32%),
+    var(--kf-bg)!important;
+  color:var(--kf-text);
+}
+body::before{
+  content:"";
+  position:fixed;
+  z-index:-1;
+  pointer-events:none;
+  width:520px;height:760px;
+  right:-90px;bottom:-120px;
+  opacity:.28;
+  transform:rotate(-5deg);
+  background:
+    radial-gradient(circle at 35% 18%,#ff9dcc 0 7px,transparent 8px),
+    radial-gradient(circle at 52% 27%,#f05aa9 0 6px,transparent 7px),
+    radial-gradient(circle at 25% 36%,#ffb0d6 0 7px,transparent 8px),
+    radial-gradient(circle at 61% 42%,#f05aa9 0 7px,transparent 8px),
+    radial-gradient(circle at 42% 54%,#ff9dcc 0 6px,transparent 7px),
+    radial-gradient(circle at 74% 58%,#ffb0d6 0 7px,transparent 8px),
+    radial-gradient(circle at 50% 72%,#f05aa9 0 7px,transparent 8px),
+    linear-gradient(125deg,transparent 44%,rgba(105,55,73,.85) 45% 48%,transparent 49%),
+    linear-gradient(155deg,transparent 38%,rgba(105,55,73,.72) 39% 42%,transparent 43%),
+    linear-gradient(105deg,transparent 53%,rgba(105,55,73,.68) 54% 57%,transparent 58%);
+  filter:drop-shadow(0 0 18px rgba(240,90,169,.08));
+}
+body::after{
+  content:"";
+  position:fixed;
+  z-index:-1;
+  pointer-events:none;
+  left:-80px;top:-90px;
+  width:330px;height:330px;
+  border-radius:50%;
+  background:rgba(240,90,169,.08);
+  filter:blur(90px);
+}
+button{
+  transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease,background .2s ease;
+}
+button:hover{transform:translateY(-1px)}
