@@ -235,3 +235,11 @@ input:focus,textarea:focus,select:focus{
   vertical-align:middle;
   box-shadow:0 0 25px rgba(240,90,169,.24);
 }
+
+/* Keep the original Keyflame K logo: pink square, white K */
+.logo .kf-logo-mark{
+  color:#fff!important;
+  background:#f05aa9!important;
+  font-size:22px!important;
+  line-height:1!important;
+}
