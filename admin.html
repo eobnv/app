@@ -505,7 +505,7 @@
 
       <div class="card">
         <div class="stat-label">
-          Brother's Balance
+          kian6203's Balance
         </div>
 
         <div class="stat-value pink" id="balanceStat">
@@ -557,7 +557,7 @@
         <h2>AB Bucks Management</h2>
 
         <p class="sub">
-          Change your brother's AB Bucks balance.
+          Change kian6203's AB Bucks balance.
         </p>
 
 
@@ -571,7 +571,7 @@
 
             <div>
               <div class="username">
-                Brother
+                kian6203
               </div>
 
               <div class="role">
@@ -662,7 +662,7 @@
         <div class="quick">
 
           <button onclick="quickChange(10)">
-            +1¥0 Bucks
+            +10 AB Bucks
           </button>
 
           <button onclick="quickChange(25)">
@@ -670,11 +670,11 @@
           </button>
 
           <button onclick="quickChange(50)">
-            +5¥0 Bucks
+            +50 AB Bucks
           </button>
 
           <button onclick="quickChange(-10)">
-            −1¥0 Bucks
+            −10 AB Bucks
           </button>
 
           <button onclick="quickChange(-25)">
@@ -682,7 +682,7 @@
           </button>
 
           <button onclick="quickChange(-50)">
-            −5¥0 Bucks
+            −50 AB Bucks
           </button>
 
         </div>
@@ -728,7 +728,16 @@ function goAnalytics(){location.href="analytics.html";}
 function goSettings(){location.href="settings.html";}
 
 
-const STORAGE_KEY = "keyflame_admin_data";
+const TARGET_USERNAME = "kian6203";
+const STORAGE_KEY = "keyflame_account_" + TARGET_USERNAME;
+
+function migrateLegacyData() {
+  if (!localStorage.getItem(STORAGE_KEY)) {
+    const legacy = localStorage.getItem("keyflame_admin_data");
+    if (legacy) localStorage.setItem(STORAGE_KEY, legacy);
+  }
+}
+migrateLegacyData();
 
 
 function loadData() {
@@ -784,10 +793,10 @@ function save() {
 function updateUI() {
 
   document.getElementById("balanceStat").textContent =
-    data.balance + " AB";
+    "¥" + data.balance.toLocaleString();
 
   document.getElementById("balanceDisplay").textContent =
-    data.balance + " AB";
+    "¥" + data.balance.toLocaleString();
 
 
   const added =
@@ -809,11 +818,11 @@ function updateUI() {
 
 
   document.getElementById("addedStat").textContent =
-    added + " AB";
+    "¥" + added.toLocaleString();
 
 
   document.getElementById("removedStat").textContent =
-    removed + " AB";
+    "¥" + removed.toLocaleString();
 
 
   document.getElementById("transactionStat").textContent =
@@ -1121,14 +1130,7 @@ function goBucks() {
 }
 
 
-function showComingSoon(section) {
 
-  showToast(
-    section +
-    " will be connected next."
-  );
-
-}
 
 
 function logout() {
