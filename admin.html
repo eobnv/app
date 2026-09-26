@@ -450,7 +450,7 @@
         Dashboard
       </button>
 
-      <button onclick="showComingSoon('Users')">
+      <button onclick="goAdmin()">
         Users
       </button>
 
@@ -458,19 +458,19 @@
         AB Bucks
       </button>
 
-      <button onclick="showComingSoon('History')">
+      <button onclick="goHistory()">
         History
       </button>
 
-      <button onclick="showComingSoon('Analytics')">
+      <button onclick="goAnalytics()">
         Analytics
       </button>
 
-      <button onclick="showComingSoon('Admin Panel')">
+      <button class="active" onclick="goAdmin()">
         Admin Panel
       </button>
 
-      <button onclick="showComingSoon('Settings')">
+      <button onclick="goSettings()">
         Settings
       </button>
 
@@ -509,7 +509,7 @@
         </div>
 
         <div class="stat-value pink" id="balanceStat">
-          0 AB
+          ¥0
         </div>
       </div>
 
@@ -520,7 +520,7 @@
         </div>
 
         <div class="stat-value" id="addedStat">
-          0 AB
+          ¥0
         </div>
       </div>
 
@@ -531,7 +531,7 @@
         </div>
 
         <div class="stat-value" id="removedStat">
-          0 AB
+          ¥0
         </div>
       </div>
 
@@ -582,7 +582,7 @@
           </div>
 
           <div class="balance" id="balanceDisplay">
-            0 AB
+            ¥0
           </div>
 
         </div>
@@ -662,7 +662,7 @@
         <div class="quick">
 
           <button onclick="quickChange(10)">
-            +10 AB Bucks
+            +1¥0 Bucks
           </button>
 
           <button onclick="quickChange(25)">
@@ -670,11 +670,11 @@
           </button>
 
           <button onclick="quickChange(50)">
-            +50 AB Bucks
+            +5¥0 Bucks
           </button>
 
           <button onclick="quickChange(-10)">
-            −10 AB Bucks
+            −1¥0 Bucks
           </button>
 
           <button onclick="quickChange(-25)">
@@ -682,7 +682,7 @@
           </button>
 
           <button onclick="quickChange(-50)">
-            −50 AB Bucks
+            −5¥0 Bucks
           </button>
 
         </div>
@@ -721,6 +721,12 @@
 
 
 <script>
+function goAdmin(){location.href="admin.html";}
+function goBucks(){location.href="bucks.html";}
+function goHistory(){location.href="history.html";}
+function goAnalytics(){location.href="analytics.html";}
+function goSettings(){location.href="settings.html";}
+
 
 const STORAGE_KEY = "keyflame_admin_data";
 
@@ -858,11 +864,11 @@ function updateUI() {
 
                 <span class="${positive ? "increase" : "decrease"}">
 
-                  ${positive ? "+" : ""}${amount} AB
+                  ${positive ? "+" : ""}¥${amount}
 
                 </span>
 
-                → Balance: ${Number(t.balanceAfter) || 0} AB
+                → Balance: ¥${Number(t.balanceAfter) || 0}
 
               </div>
 
@@ -934,7 +940,7 @@ function changeBucks(direction) {
   if (data.balance + change < 0) {
 
     showToast(
-      "Balance cannot go below 0 AB."
+      "Balance cannot go below ¥0."
     );
 
     return;
@@ -983,7 +989,7 @@ function changeBucks(direction) {
 
 
   showToast(
-    `${change > 0 ? "+" : ""}${change} AB Bucks applied.`
+    `${change > 0 ? "+" : ""}¥${change} AB Bucks applied.`
   );
 
 
@@ -1005,7 +1011,7 @@ function quickChange(amount) {
   if (data.balance + amount < 0) {
 
     showToast(
-      "Balance cannot go below 0 AB."
+      "Balance cannot go below ¥0."
     );
 
     return;
@@ -1054,7 +1060,7 @@ function quickChange(amount) {
 
 
   showToast(
-    `${amount > 0 ? "+" : ""}${amount} AB Bucks applied.`
+    `${amount > 0 ? "+" : ""}¥${amount} AB Bucks applied.`
   );
 
 }
