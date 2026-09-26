@@ -681,7 +681,11 @@ margin-left: 250px;
 <script>
 
   const CURRENT_USERNAME =
-    (sessionStorage.getItem("keyflame_user") || "kian6203").trim() || "kian6203";
+    (sessionStorage.getItem("keyflame_user") || "").trim();
+
+  if (!CURRENT_USERNAME) {
+    window.location.href = "login.html";
+  }
 
   const PROFILE_KEY =
     "keyflame_profile_" + CURRENT_USERNAME;
