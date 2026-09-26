@@ -433,7 +433,18 @@ tr:hover td {
 
 <script>
 
-const STORAGE_KEY = "keyflame_admin_data";
+const CURRENT_USERNAME = (sessionStorage.getItem("keyflame_user") || "").trim();
+
+if (!CURRENT_USERNAME) {
+  window.location.href = "login.html";
+}
+
+const STORAGE_KEY = "keyflame_account_" + CURRENT_USERNAME;
+
+if (CURRENT_USERNAME === "kian6203" && !localStorage.getItem(STORAGE_KEY)) {
+  const legacy = localStorage.getItem("keyflame_admin_data");
+  if (legacy) localStorage.setItem(STORAGE_KEY, legacy);
+}
 
 function getData() {
 
