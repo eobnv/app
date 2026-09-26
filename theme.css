@@ -219,26 +219,3 @@ input:focus,textarea:focus,select:focus{
   .main{margin-left:0!important;width:100%!important}
 }
 
-
-/* Oni-inspired Japanese crest branding */
-.brand-mark{
-  background:#120b10 url("keyflame-oni.png") center/78% 78% no-repeat!important;
-  color:transparent!important;
-  font-size:0!important;
-  border:1px solid rgba(255,157,204,.22)!important;
-}
-.logo{
-  display:flex!important;
-  align-items:center!important;
-  gap:10px!important;
-}
-.logo::before{
-  content:"";
-  width:34px;
-  height:34px;
-  flex:0 0 34px;
-  border-radius:10px;
-  background:#120b10 url("keyflame-oni.png") center/78% 78% no-repeat;
-  border:1px solid rgba(255,157,204,.22);
-  box-shadow:0 0 22px rgba(240,90,169,.18);
-}
