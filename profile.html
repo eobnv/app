@@ -1312,41 +1312,22 @@ margin-left: 250px;
   updateStats();
 
 </script>
-
 <script>
 (function(){
-  if(window.__keyflameVisualsLoaded)return;
-  window.__keyflameVisualsLoaded=true;
-  const root=document.documentElement;
-  let raf=0;
-  window.addEventListener("mousemove",function(e){
-    if(raf)return;
-    raf=requestAnimationFrame(function(){
-      raf=0;
-      const x=(e.clientX/window.innerWidth-.5);
-      const y=(e.clientY/window.innerHeight-.5);
-      root.style.setProperty("--kf-mx",x.toFixed(3));
-      root.style.setProperty("--kf-my",y.toFixed(3));
-    });
-  },{passive:true});
-  const selectors=".card,.glass,.section,.panel,.stat-card,.activity,.game-card,.feature,.support-card,.hero,main>section";
-  document.querySelectorAll(selectors).forEach((el,i)=>{
-    if(!el.classList.contains("kf-reveal"))el.classList.add("kf-reveal");
-    el.style.transitionDelay=Math.min(i*35,280)+"ms";
-  });
-  if("IntersectionObserver" in window){
-    const io=new IntersectionObserver(entries=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){
-          entry.target.classList.add("kf-visible");
-          io.unobserve(entry.target);
-        }
-      });
-    },{threshold:.08});
-    document.querySelectorAll(".kf-reveal").forEach(el=>io.observe(el));
-  }else{
-    document.querySelectorAll(".kf-reveal").forEach(el=>el.classList.add("kf-visible"));
-  }
+if(window.__keyflameGithubUI)return;window.__keyflameGithubUI=true;
+const path=(location.pathname.split("/").pop()||"index.html").toLowerCase();
+const appPages=["dashboard.html","games.html","bucks.html","history.html","analytics.html","profile.html","settings.html","admin.html"];
+const isApp=appPages.includes(path);
+document.querySelectorAll(".nav-link[href]").forEach(link=>{const href=(link.getAttribute("href")||"").split("#")[0].split("/").pop().toLowerCase();if(href===path)link.classList.add("active")});
+if(isApp&&document.querySelector(".main")&&!document.querySelector(".kf-header")){
+const h=document.createElement("header");h.className="kf-header";h.innerHTML='<div class="kf-search-wrap"><span class="kf-search-icon">⌕</span><input class="kf-header-search" id="kfHeaderSearch" aria-label="Search Keyflame" placeholder="Search Keyflame" autocomplete="off"><span class="kf-shortcut">Ctrl K</span></div><div class="kf-header-spacer"></div><button class="kf-command-btn" type="button" id="kfCommandOpen">Command palette</button><button class="kf-collapse-btn" type="button" id="kfCollapse">☰</button>';document.body.prepend(h)}
+const routes=[["Dashboard","dashboard.html"],["Games","games.html"],["AB Bucks","bucks.html"],["History","history.html"],["Analytics","analytics.html"],["Profile","profile.html"],["Settings","settings.html"],["Admin","admin.html"]];
+function openCommand(initial){let m=document.querySelector(".kf-command");if(!m){m=document.createElement("div");m.className="kf-command";m.innerHTML='<div class="kf-command-box" role="dialog" aria-modal="true"><input class="kf-command-input" placeholder="Type a page or action..." aria-label="Command search"><div class="kf-command-list"></div></div>';document.body.appendChild(m);const i=m.querySelector(".kf-command-input");i.addEventListener("input",()=>render(i.value));m.addEventListener("click",e=>{if(e.target===m)m.classList.remove("open")});i.addEventListener("keydown",e=>{if(e.key==="Escape")m.classList.remove("open");if(e.key==="Enter"){const f=m.querySelector(".kf-command-item");if(f)location.href=f.getAttribute("href")}})}const i=m.querySelector(".kf-command-input");i.value=initial||"";render(initial||"");m.classList.add("open");i.focus();function render(q){const x=(q||"").trim().toLowerCase(),list=routes.filter(r=>r[0].toLowerCase().includes(x));m.querySelector(".kf-command-list").innerHTML=list.map(r=>'<a class="kf-command-item" href="'+r[1]+'"><span>↳</span><span>'+r[0]+'</span><small>'+r[1]+'</small></a>').join("")||'<div style="padding:12px;color:var(--kf-muted)">No matching page.</div>'}}
+const b=document.getElementById("kfCommandOpen");if(b)b.addEventListener("click",()=>openCommand(""));
+const s=document.getElementById("kfHeaderSearch");if(s)s.addEventListener("keydown",e=>{if(e.key==="Enter")openCommand(s.value);if(e.key==="Escape")s.blur()});
+const c=document.getElementById("kfCollapse");if(c){c.addEventListener("click",()=>{document.body.classList.toggle("kf-collapsed");sessionStorage.setItem("keyflame_sidebar_collapsed",document.body.classList.contains("kf-collapsed")?"1":"0")});if(sessionStorage.getItem("keyflame_sidebar_collapsed")==="1")document.body.classList.add("kf-collapsed")}
+document.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();openCommand("")}if(e.key==="/"&&!/input|textarea|select/i.test(document.activeElement.tagName||"")){e.preventDefault();if(s)s.focus()}});
+const reveal=document.querySelectorAll(".card,.game-card,.section,.profile-card,.balance-card,.activity,main>section");reveal.forEach((el,i)=>{el.classList.add("kf-reveal");el.style.transitionDelay=Math.min(i*25,180)+"ms"});if("IntersectionObserver"in window){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("kf-visible");io.unobserve(e.target)}}),{threshold:.04});reveal.forEach(el=>io.observe(el))}else reveal.forEach(el=>el.classList.add("kf-visible"));
 })();
 </script>
 </body>
