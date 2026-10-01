@@ -1202,10 +1202,7 @@ function logout() {
 
 }
 
-updateStats();
-updateActivity();
-drawChart();
-setupTooltip();
+keyflameSyncAccountToLocalStorage(CURRENT_USERNAME).then(() => { updateStats(); updateActivity(); drawChart(); setupTooltip(); }).catch(() => { updateStats(); updateActivity(); drawChart(); setupTooltip(); });
 
 window.addEventListener("resize", drawChart);
 window.addEventListener("storage", () => {
