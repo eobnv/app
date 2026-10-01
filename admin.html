@@ -950,165 +950,54 @@ function updateUI() {
 }
 
 
-function changeBucks(direction) {
-
-  const amountInput =
-    document.getElementById("amount");
-
-  const reasonInput =
-    document.getElementById("reason");
-
-  const gameInput =
-    document.getElementById("game");
-
-
-  const amount =
-    Math.floor(Number(amountInput.value));
-
+async function changeBucks(direction) {
+  const amountInput = document.getElementById("amount");
+  const reasonInput = document.getElementById("reason");
+  const gameInput = document.getElementById("game");
+  const amount = Math.floor(Number(amountInput.value));
 
   if (!amount || amount <= 0) {
-
-    showToast(
-      "Enter an amount first."
-    );
-
+    showToast("Enter an amount first.");
     return;
-
   }
 
-
-  const change =
-    amount * direction;
-
-
-  if (data.balance + change < 0) {
-
-    showToast(
-      "Balance cannot go below ¥0."
+  const change = amount * direction;
+  try {
+    const result = await keyflameAdminAdjustBucks(
+      TARGET_USERNAME,
+      change,
+      reasonInput.value.trim() || "AB Bucks adjustment",
+      gameInput.value
     );
-
-    return;
-
+    data = loadData();
+    data.balance = result.balance;
+    updateUI();
+    showToast(`${change > 0 ? "+" : ""}¥${change} AB Bucks applied.`);
+    amountInput.value = "";
+    reasonInput.value = "";
+    gameInput.value = "";
+  } catch (error) {
+    showToast(error?.message || "Could not update AB Bucks.");
   }
-
-
-  data.balance += change;
-
-
-  data.transactions.push({
-
-    id:
-      Date.now() +
-      "-" +
-      Math.random()
-        .toString(36)
-        .slice(2),
-
-    amount: change,
-
-    previousBalance:
-      data.balance - change,
-
-    balanceAfter:
-      data.balance,
-
-    reason:
-      reasonInput.value.trim(),
-
-    game:
-      gameInput.value,
-
-    time:
-      new Date().toLocaleString(),
-
-    timestamp:
-      new Date().toISOString()
-
-  });
-
-
-  save();
-
-  updateUI();
-
-
-  showToast(
-    `${change > 0 ? "+" : ""}¥${change} AB Bucks applied.`
-  );
-
-
-  amountInput.value = "";
-
-  reasonInput.value = "";
-
-  gameInput.value = "";
-
 }
 
-
-function quickChange(amount) {
-
-  amount =
-    Number(amount);
-
-
-  if (data.balance + amount < 0) {
-
-    showToast(
-      "Balance cannot go below ¥0."
-    );
-
-    return;
-
-  }
-
-
-  data.balance += amount;
-
-
-  data.transactions.push({
-
-    id:
-      Date.now() +
-      "-" +
-      Math.random()
-        .toString(36)
-        .slice(2),
-
-    amount: amount,
-
-    previousBalance:
-      data.balance - amount,
-
-    balanceAfter:
-      data.balance,
-
-    reason:
+async function quickChange(amount) {
+  const change = Number(amount);
+  try {
+    const result = await keyflameAdminAdjustBucks(
+      TARGET_USERNAME,
+      change,
       "Quick action",
-
-    game:
-      "",
-
-    time:
-      new Date().toLocaleString(),
-
-    timestamp:
-      new Date().toISOString()
-
-  });
-
-
-  save();
-
-  updateUI();
-
-
-  showToast(
-    `${amount > 0 ? "+" : ""}¥${amount} AB Bucks applied.`
-  );
-
+      ""
+    );
+    data = loadData();
+    data.balance = result.balance;
+    updateUI();
+    showToast(`${change > 0 ? "+" : ""}¥${change} AB Bucks applied.`);
+  } catch (error) {
+    showToast(error?.message || "Could not update AB Bucks.");
+  }
 }
-
 
 function showToast(message) {
 
@@ -1180,7 +1069,7 @@ function logout() {
 }
 
 
-updateUI();
+keyflameGetAccount(TARGET_USERNAME).then(account => { if (account) { data = { balance: account.balance, transactions: account.transactions }; updateUI(); } else { updateUI(); } }).catch(() => updateUI());
 
 window.addEventListener(
   "storage",
