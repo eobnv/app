@@ -551,9 +551,8 @@ function logout() {
     window.location.href = "login.html";
 }
 
-render();
-
-window.addEventListener("storage", render);
+keyflameSyncAccountToLocalStorage(CURRENT_USERNAME).then(() => render()).catch(() => render());
+window.addEventListener("storage", () => { keyflameSyncAccountToLocalStorage(CURRENT_USERNAME).then(render).catch(render); });
 
 </script>
 <script>
