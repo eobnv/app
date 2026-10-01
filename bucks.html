@@ -555,6 +555,7 @@ keyflameSyncAccountToLocalStorage(CURRENT_USERNAME).then(() => render()).catch((
 window.addEventListener("storage", () => { keyflameSyncAccountToLocalStorage(CURRENT_USERNAME).then(render).catch(render); });
 
 </script>
+<script>keyflameUpdateSidebar();</script>
 <script>
 (function(){
   if(window.__keyflameGithubUI)return;
