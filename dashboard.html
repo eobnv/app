@@ -1530,8 +1530,7 @@ margin-left: 250px;
        START
     -------------------------------- */
 
-    loadProfile();
-    updateDashboard();
+    keyflameSyncAccountToLocalStorage(CURRENT_USERNAME).then(() => { loadProfile(); updateDashboard(); }).catch(() => { loadProfile(); updateDashboard(); });
 
   </script>
 <script>
